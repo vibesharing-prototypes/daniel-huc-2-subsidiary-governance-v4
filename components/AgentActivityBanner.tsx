@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { BOOK_BUILDING_ITEMS } from '@/components/data'
+import { BOOK_BUILDING_ITEMS, PLANNING_SUGGESTIONS } from '@/components/data'
 import { useProtoState } from '@/components/ProtoStateContext'
 import { useAgentActivity, type AgentJob } from '@/components/AgentActivityContext'
 
@@ -39,8 +39,8 @@ const CONFIGS: Record<ProtoState, StateConfig> = {
     pillBg: 'bg-emerald-50 dark:bg-emerald-950/50',
     glowClass: 'hero-glow-calm',
     cardBorder: 'border-slate-200 dark:border-zinc-800',
-    headline: 'All quiet — nothing requires your attention today.',
-    subtext: "Agents are monitoring all entities and nothing is pressing. A good time to explore features you haven't tried yet — like batch pack creation or the cross-entity consistency check.",
+    headline: 'Nothing urgent — but plenty you can get ahead on.',
+    subtext: '',
     metrics: [
       { value: '8', label: 'Entities Active', numClass: 'text-blue-600 dark:text-blue-400', boxClass: 'border-blue-100 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/30' },
       { value: '3', label: 'Packs Approved', numClass: 'text-emerald-600 dark:text-emerald-400', boxClass: 'border-emerald-100 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-950/30' },
@@ -403,6 +403,7 @@ export default function AgentActivityBanner() {
   const state = useProtoState()
   const cfg = CONFIGS[state]
   const items = BOOK_BUILDING_ITEMS.filter(i => i.states.includes(state))
+  const suggestions = PLANNING_SUGGESTIONS.filter(s => s.states.includes(state))
   const total = items.length
 
   const agentActivity = useAgentActivity()
@@ -410,6 +411,11 @@ export default function AgentActivityBanner() {
   const activeJob = jobs.find(j => j.status === 'running') ?? jobs.find(j => j.status === 'done')
 
   const headline = cfg.headline.replace('{total}', String(total))
+
+  // Build a dynamic subtext for calm state from actual data
+  const subtext = state === 'calm'
+    ? `${items.length} book building item${items.length !== 1 ? 's' : ''} and ${suggestions.length} planning suggestion${suggestions.length !== 1 ? 's' : ''} ready to review — from missing agenda sections and upcoming quarter prep to presenter updates and regulatory changes.`
+    : cfg.subtext
   const metrics = cfg.metrics.map(m => ({
     ...m,
     value: m.value.replace('{total}', String(total)),
@@ -436,7 +442,7 @@ export default function AgentActivityBanner() {
 
         {/* Subtext */}
         <p className="text-center text-[13px] text-slate-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-7">
-          {cfg.subtext}
+          {subtext}
         </p>
 
         {/* Metrics */}
