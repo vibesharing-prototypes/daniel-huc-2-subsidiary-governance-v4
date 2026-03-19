@@ -5,11 +5,80 @@ import ConfirmActionModal from '@/components/ConfirmActionModal'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { ENTITIES } from '@/components/data'
 
-// ─── Action definitions ───────────────────────────────────────────────────────
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+function IconQ3Plan() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2.5" y="3.5" width="15" height="13.5" rx="2" />
+      <path d="M7 1.5v4M13 1.5v4M2.5 8.5h15" />
+      {/* date grid — left column (Q1/Q2 passed) */}
+      <path d="M5.5 12h3.5M5.5 14.5h3.5" strokeWidth="1.1" strokeOpacity="0.35" />
+      {/* Q3 block — highlighted */}
+      <rect x="11" y="10.5" width="5.5" height="6" rx="1.5" fill="currentColor" fillOpacity="0.13" strokeWidth="0" />
+      <path d="M12.5 12.5h2.5M12.5 14.5h1.5" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
+function IconAnnualPlan() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* back page */}
+      <rect x="5" y="2" width="12.5" height="11" rx="1.5" strokeOpacity="0.35" />
+      {/* front page */}
+      <rect x="2" y="5.5" width="12.5" height="12.5" rx="2" />
+      <path d="M6 3.5v4M12.5 3.5v4M2 10.5h12.5" />
+      <path d="M4.5 13.5h7.5M4.5 16h5" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
+function IconSyncPresenters() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* primary person */}
+      <circle cx="7.5" cy="5.5" r="3" />
+      <path d="M2 17.5c0-3 2.5-5.5 5.5-5.5" />
+      {/* sync arrows */}
+      <path d="M13 8a4.5 4.5 0 110 6.5" />
+      <path d="M13 8l-1.5.5.5 1.5" />
+      <path d="M13 14.5l1.5-.5-.5-1.5" />
+    </svg>
+  )
+}
+
+function IconUpdateRisk() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* shield */}
+      <path d="M10 2L3.5 5v4.5C3.5 13.8 6.5 17 10 18c3.5-1 6.5-4.2 6.5-8.5V5L10 2z" />
+      {/* document lines inside */}
+      <path d="M7 8.5h6M7 11h6M7 13.5h3.5" strokeWidth="1.3" />
+    </svg>
+  )
+}
+
+function IconAlignESG() {
+  return (
+    <svg className="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      {/* document */}
+      <rect x="2.5" y="10.5" width="9" height="7.5" rx="1.5" />
+      <path d="M5 13.5h4M5 15.5h2.5" strokeWidth="1.2" />
+      {/* leaf growing from stem */}
+      <path d="M9.5 10.5V7" />
+      <path d="M9.5 9c1.5-3 4.5-4.5 7.5-3.5-1 3-4 5-7.5 3.5z" />
+      <path d="M9.5 8c-1-2.5-0.5-5.5 2.5-6.5.5 2.5-.5 5.5-2.5 6.5z" />
+    </svg>
+  )
+}
+
+// ─── Action data ──────────────────────────────────────────────────────────────
 
 interface QuickAction {
   id: string
   label: string
+  sublabel: string
   icon: React.ReactNode
   entityIds: number[]
   title: string
@@ -21,58 +90,12 @@ interface QuickAction {
   badgeClasses: string
 }
 
-function IconCalendar() {
-  return (
-    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="12" height="11" rx="1.5" />
-      <path d="M5 1v3M11 1v3M2 7h12" />
-    </svg>
-  )
-}
-
-function IconCalendarYear() {
-  return (
-    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="2" y="3" width="12" height="11" rx="1.5" />
-      <path d="M5 1v3M11 1v3M2 7h12M5 11h1M8 11h1M11 11h1" />
-    </svg>
-  )
-}
-
-function IconUsers() {
-  return (
-    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="6" cy="5" r="2.5" />
-      <path d="M1 14c0-2.8 2.2-5 5-5s5 2.2 5 5" />
-      <path d="M12 7c1.1 0 2 .9 2 2s-.9 2-2 2M14.5 14H15c0-1.8-1-3.3-2.5-4" />
-    </svg>
-  )
-}
-
-function IconShield() {
-  return (
-    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 2L3 4.5v3.5C3 11 5.2 13.5 8 14.5c2.8-1 5-3.5 5-6.5V4.5L8 2z" />
-      <path d="M6 8.5l1.5 1.5L10.5 7" />
-    </svg>
-  )
-}
-
-function IconLeaf() {
-  return (
-    <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M13 3C9 3 5 6.5 5 11c0 .5.1 1 .2 1.5" />
-      <path d="M5 11c1.5 0 5-1.5 8-8" />
-      <path d="M3 14l2-3" />
-    </svg>
-  )
-}
-
 const QUICK_ACTIONS: QuickAction[] = [
   {
     id: 'q3-plan',
     label: 'Create Q3 Plan',
-    icon: <IconCalendar />,
+    sublabel: 'All 8 entities · Q3 2026',
+    icon: <IconQ3Plan />,
     entityIds: [1, 2, 3, 4, 5, 6, 7, 8],
     title: 'Create Q3 2026 board meeting plans for all 8 entities',
     description: 'Generate draft agenda frameworks for every Q3 2026 board meeting across all eight entities, based on standing items, the regulatory calendar, prior meeting patterns, and any open action items.',
@@ -83,7 +106,8 @@ const QUICK_ACTIONS: QuickAction[] = [
   {
     id: '2027-plan',
     label: 'Create 2027 Plan',
-    icon: <IconCalendarYear />,
+    sublabel: 'All 8 entities · Full year',
+    icon: <IconAnnualPlan />,
     entityIds: [1, 2, 3, 4, 5, 6, 7, 8],
     title: 'Create 2027 annual board calendar for all 8 entities',
     description: 'Generate a full-year 2027 board meeting schedule and agenda frameworks for all entities, aligned with statutory reporting cycles, regulatory filing deadlines, and governance best practices.',
@@ -94,7 +118,8 @@ const QUICK_ACTIONS: QuickAction[] = [
   {
     id: 'sync-presenters',
     label: 'Sync All Presenters',
-    icon: <IconUsers />,
+    sublabel: '3 entities · Financial Review',
+    icon: <IconSyncPresenters />,
     entityIds: [2, 4, 1],
     title: 'Update presenter assignments across 3 board packs',
     description: 'Apply all recent personnel changes to presenter fields in one step: Anna Bauer replaces Klaus Weber as CFO presenter at Apex Ventures, Erik Lindqvist takes over Financial Review at Nordic Solutions, and the unassigned Financial Review section at Meridian Capital is assigned.',
@@ -106,7 +131,8 @@ const QUICK_ACTIONS: QuickAction[] = [
   {
     id: 'update-risk',
     label: 'Update Risk Sections',
-    icon: <IconShield />,
+    sublabel: '4 EU entities · Risk & Compliance',
+    icon: <IconUpdateRisk />,
     entityIds: [2, 3, 4, 7],
     title: 'Apply latest regulatory changes to Risk & Compliance across 4 EU entities',
     description: 'Update Risk & Compliance sections for all four EU entities to reflect the revised EU AI Act enforcement deadline (Q3 2026, shifted from Q2) and the ECB rate cut to 2.90% on 6 March 2026. Outdated references are flagged and replaced automatically.',
@@ -119,7 +145,8 @@ const QUICK_ACTIONS: QuickAction[] = [
   {
     id: 'align-esg',
     label: 'Align ESG Disclosures',
-    icon: <IconLeaf />,
+    sublabel: '4 EU entities · ESG Disclosure',
+    icon: <IconAlignESG />,
     entityIds: [2, 3, 4, 7],
     title: 'Add CSRD-compliant ESG disclosure sections to all 4 EU entity packs',
     description: 'Add standardised ESG disclosure sections to all four qualifying EU entity board packs, covering scope 1 & 2 emissions, social metrics, and board oversight of sustainability strategy — as required under CSRD from January 2026. None of the four packs currently include this section.',
@@ -133,18 +160,18 @@ const QUICK_ACTIONS: QuickAction[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+// Minimum width (px) each tile must be before overflow kicks in
+const MIN_TILE_W = 140
 const ITEM_GAP = 8
-const APPROX_MORE_BTN_W = 90 // reserve space for "+N more ▾" button
+const MORE_BTN_W = 60
 
 export default function QuickActionsBar() {
   const [confirmAction, setConfirmAction] = useState<QuickAction | null>(null)
   const [visibleCount, setVisibleCount] = useState(QUICK_ACTIONS.length)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const itemRefs = useRef<(HTMLButtonElement | null)[]>([])
   const agentActivity = useAgentActivity()
 
-  // Overflow detection
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -152,25 +179,18 @@ export default function QuickActionsBar() {
     function measure() {
       if (!container) return
       const cw = container.offsetWidth
-      const widths = itemRefs.current.map(el => el?.offsetWidth ?? 0)
+      const n = QUICK_ACTIONS.length
 
-      // Check if everything fits without a "more" button
-      const totalW = widths.reduce((s, w, i) => s + w + (i > 0 ? ITEM_GAP : 0), 0)
-      if (totalW <= cw) {
-        setVisibleCount(QUICK_ACTIONS.length)
+      // All items fit comfortably?
+      if (n * MIN_TILE_W + (n - 1) * ITEM_GAP <= cw) {
+        setVisibleCount(n)
         return
       }
 
-      // Reserve space for "more" button and count how many fit
-      let used = 0
-      let count = 0
-      for (let i = 0; i < widths.length; i++) {
-        const w = widths[i] + (i > 0 ? ITEM_GAP : 0)
-        if (used + w + APPROX_MORE_BTN_W + ITEM_GAP > cw) break
-        used += w
-        count++
-      }
-      setVisibleCount(count)
+      // How many tiles fit when we reserve space for the "more" button?
+      const available = cw - MORE_BTN_W - ITEM_GAP
+      const count = Math.floor((available + ITEM_GAP) / (MIN_TILE_W + ITEM_GAP))
+      setVisibleCount(Math.max(1, count))
     }
 
     measure()
@@ -179,7 +199,6 @@ export default function QuickActionsBar() {
     return () => ro.disconnect()
   }, [])
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return
     function handler(e: MouseEvent) {
@@ -213,32 +232,41 @@ export default function QuickActionsBar() {
     setTimeout(() => agentActivity.completeJob(jobId), 30_000)
   }
 
-  const hiddenActions = QUICK_ACTIONS.slice(visibleCount)
+  const visible = QUICK_ACTIONS.slice(0, visibleCount)
+  const hidden = QUICK_ACTIONS.slice(visibleCount)
 
   return (
     <>
-      <div ref={containerRef} className="flex items-center gap-2 overflow-hidden">
-        {QUICK_ACTIONS.map((action, i) => (
+      <div ref={containerRef} className="flex gap-2">
+        {visible.map(action => (
           <button
             key={action.id}
-            ref={el => { itemRefs.current[i] = el }}
             onClick={() => setConfirmAction(action)}
-            className={`flex-shrink-0 flex items-center gap-1.5 h-8 pl-2.5 pr-3 bg-white dark:bg-zinc-800 border border-black/[0.08] dark:border-zinc-700 rounded-lg text-[12px] font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-black/[0.13] dark:hover:border-zinc-600 hover:text-slate-800 dark:hover:text-zinc-100 transition-all whitespace-nowrap ${i >= visibleCount ? 'hidden' : ''}`}
+            className="flex-1 min-w-0 flex items-center gap-3 h-[64px] px-4 bg-white dark:bg-zinc-800 border border-black/[0.08] dark:border-zinc-700 rounded-xl text-left hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-black/[0.14] dark:hover:border-zinc-600 hover:shadow-sm active:scale-[0.99] transition-all group"
           >
-            <span className="text-slate-400 dark:text-zinc-500">{action.icon}</span>
-            {action.label}
+            <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-slate-50 dark:bg-zinc-700 flex items-center justify-center group-hover:bg-white dark:group-hover:bg-zinc-600 transition-colors">
+              <span className="text-slate-500 dark:text-zinc-300">{action.icon}</span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug truncate">
+                {action.label}
+              </p>
+              <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug truncate">
+                {action.sublabel}
+              </p>
+            </div>
           </button>
         ))}
 
-        {hiddenActions.length > 0 && (
+        {hidden.length > 0 && (
           <div className="relative flex-shrink-0" data-more-dropdown>
             <button
               onClick={() => setDropdownOpen(v => !v)}
-              className="flex items-center gap-1 h-8 px-3 bg-white dark:bg-zinc-800 border border-black/[0.08] dark:border-zinc-700 rounded-lg text-[12px] font-medium text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-black/[0.13] transition-all whitespace-nowrap"
+              className="flex flex-col items-center justify-center gap-1 h-[64px] w-[52px] bg-white dark:bg-zinc-800 border border-black/[0.08] dark:border-zinc-700 rounded-xl text-slate-500 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-black/[0.14] transition-all"
             >
-              +{hiddenActions.length} more
+              <span className="text-[12px] font-semibold leading-none">+{hidden.length}</span>
               <svg
-                className={`w-3 h-3 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`}
                 viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
               >
                 <path d="M2 4l4 4 4-4" />
@@ -246,17 +274,23 @@ export default function QuickActionsBar() {
             </button>
 
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-1.5 bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-zinc-700 rounded-2xl shadow-xl py-1.5 z-30 min-w-[200px]"
+              <div
+                className="absolute top-full right-0 mt-1.5 bg-white dark:bg-zinc-900 border border-black/[0.08] dark:border-zinc-700 rounded-2xl shadow-xl overflow-hidden z-30 min-w-[220px]"
                 style={{ animation: 'confirmModalIn 150ms cubic-bezier(0.22,1,0.36,1) both' }}
               >
-                {hiddenActions.map(action => (
+                {hidden.map(action => (
                   <button
                     key={action.id}
                     onClick={() => { setConfirmAction(action); setDropdownOpen(false) }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2.5 text-[13px] text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors text-left"
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors text-left"
                   >
-                    <span className="text-slate-400 dark:text-zinc-500">{action.icon}</span>
-                    {action.label}
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-slate-50 dark:bg-zinc-700 flex items-center justify-center">
+                      <span className="text-slate-500 dark:text-zinc-300">{action.icon}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug">{action.label}</p>
+                      <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug">{action.sublabel}</p>
+                    </div>
                   </button>
                 ))}
               </div>
