@@ -100,7 +100,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 }
 
 export default function EntitySidebar({ entity }: { entity: Entity }) {
-  const activeItem = BOOK_BUILDING_ITEMS.find(item => item.entityId === entity.id) ?? null
+  const activeItem = BOOK_BUILDING_ITEMS.find(item => item.entityIds.includes(entity.id)) ?? null
   const [messages, setMessages] = useState<ChatMessage[]>(getEntityMessages(entity))
   const [inputValue, setInputValue] = useState('')
   const scrollRef = useRef<HTMLDivElement>(null)

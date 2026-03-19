@@ -76,18 +76,20 @@ const CATEGORY_CONFIG: Record<Category, {
 // ─── Detail modal ─────────────────────────────────────────────────────────────
 
 function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose: () => void }) {
-  const entity = ENTITIES.find(e => e.id === item.entityId)!
+  const entities = item.entityIds.map(id => ENTITIES.find(e => e.id === id)!).filter(Boolean)
+  const primaryEntity = entities[0]
   const agentActivity = useAgentActivity()
   const cfg = CATEGORY_CONFIG[item.category]
 
   function handleRunInBackground() {
-    if (agentActivity) {
+    if (agentActivity && primaryEntity) {
+      const allApps = Array.from(new Set(entities.flatMap(e => e.connectedApps)))
       const jobId = agentActivity.addJob({
         type: 'action',
-        entityId: entity.id,
-        entityShortName: entity.shortName,
+        entityId: primaryEntity.id,
+        entityShortName: entities.length > 1 ? `${entities.length} entities` : primaryEntity.shortName,
         title: item.title,
-        workflowSteps: buildBookBuildingSteps(entity.connectedApps),
+        workflowSteps: buildBookBuildingSteps(allApps),
       })
       setTimeout(() => agentActivity.completeJob(jobId), 30_000)
     }
@@ -109,11 +111,13 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
         </button>
 
         <div className="px-6 pt-6 pb-5">
-          <div className="flex items-center gap-3 mb-5 pr-8">
-            <EntityLogo entity={entity} size="md" />
+          <div className="flex items-start gap-3 mb-5 pr-8">
+            <div className="flex -space-x-2 flex-shrink-0">
+              {entities.map(e => <EntityLogo key={e.id} entity={e} size="md" />)}
+            </div>
             <div className="min-w-0">
-              <p className="text-[11px] text-slate-500 leading-snug">{entity.country}</p>
-              <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100 leading-snug truncate">{entity.name}</p>
+              <p className="text-[11px] text-slate-500 leading-snug">{entities.length} {entities.length === 1 ? 'entity' : 'entities'}</p>
+              <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100 leading-snug">{entities.map(e => e.shortName).join(', ')}</p>
             </div>
           </div>
 
@@ -143,7 +147,7 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
               </button>
             )}
             <Link
-              href={`/entity/${item.entityId}`}
+              href={`/entity/${primaryEntity?.id ?? 1}`}
               className="px-4 py-2 bg-slate-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-medium rounded-lg hover:bg-slate-700 dark:hover:bg-white active:bg-slate-800 dark:active:bg-zinc-200 transition-colors"
             >
               {item.actionLabel}
@@ -170,15 +174,17 @@ export default function BookBuilding() {
 
   function handleCTA(e: React.MouseEvent, item: BookBuildingItem) {
     e.stopPropagation()
-    const entity = ENTITIES.find(en => en.id === item.entityId)
+    const itemEntities = item.entityIds.map(id => ENTITIES.find(en => en.id === id)!).filter(Boolean)
+    const entity = itemEntities[0]
     if (!entity || !agentActivity) return
     setItemStatus(prev => ({ ...prev, [item.id]: 'applying' }))
+    const allApps = Array.from(new Set(itemEntities.flatMap(e => e.connectedApps)))
     const jobId = agentActivity.addJob({
       type: 'action',
       entityId: entity.id,
-      entityShortName: entity.shortName,
+      entityShortName: itemEntities.length > 1 ? `${itemEntities.length} entities` : entity.shortName,
       title: item.title,
-      workflowSteps: buildBookBuildingSteps(entity.connectedApps),
+      workflowSteps: buildBookBuildingSteps(allApps),
     })
     setTimeout(() => {
       setItemStatus(prev => ({ ...prev, [item.id]: 'applied' }))
@@ -209,7 +215,7 @@ export default function BookBuilding() {
       <div className="space-y-3">
         {visibleItems.map((item, i) => {
           const cfg = CATEGORY_CONFIG[item.category]
-          const entity = ENTITIES.find(e => e.id === item.entityId)!
+          const itemEntities = item.entityIds.map(id => ENTITIES.find(e => e.id === id)!).filter(Boolean)
           const status = itemStatus[item.id]
           const isApplying = status === 'applying'
           const isApplied = status === 'applied'
@@ -230,10 +236,12 @@ export default function BookBuilding() {
               <div className={`relative p-[22px_24px] ${isApplying ? 'cursor-default' : ''}`}>
                 {/* Entity row */}
                 <div className={`flex items-center gap-2.5 mb-3.5 ${isApplying || isApplied ? 'opacity-40' : ''}`}>
-                  <EntityLogo entity={entity} size="md" />
+                  <div className="flex -space-x-2 flex-shrink-0">
+                    {itemEntities.map(e => <EntityLogo key={e.id} entity={e} size="sm" />)}
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100">{entity.name}</p>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{entity.country} · Board: {entity.nextBoard}</p>
+                    <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
+                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
                   </div>
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 ${cfg.badgeClasses}`}>
                     {cfg.badgeLabel}
