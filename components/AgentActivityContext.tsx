@@ -4,6 +4,8 @@ import { createContext, useContext, useCallback, useState, type ReactNode } from
 
 export type AgentJobType = 'edit' | 'action'
 
+export type RedirectDestination = 'smart-book-builder' | 'forward-planner'
+
 export interface AgentJob {
   id: string
   type: AgentJobType
@@ -18,6 +20,8 @@ export interface AgentJob {
   startedAt: number
   /** Ordered step labels to display in the progress widget */
   workflowSteps?: string[]
+  /** Where to send the user after the job completes */
+  destination?: RedirectDestination
 }
 
 interface AgentActivityContextValue {
