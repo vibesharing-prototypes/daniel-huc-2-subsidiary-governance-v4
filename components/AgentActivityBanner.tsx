@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { BOOK_BUILDING_ITEMS, PLANNING_SUGGESTIONS } from '@/components/data'
 import { useProtoState } from '@/components/ProtoStateContext'
 import { useAgentActivity, type AgentJob } from '@/components/AgentActivityContext'
+import RedirectModal, { type RedirectDestination } from '@/components/RedirectModal'
 
 type ProtoState = 'calm' | 'busy' | 'critical'
 
@@ -148,6 +149,7 @@ function AgentProgressWidget({ job, onDismiss }: { job: AgentJob; onDismiss: () 
   const [stoppedAtStep, setStoppedAtStep] = useState<number | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [runKey, setRunKey] = useState(0)
+  const [redirectDest, setRedirectDest] = useState<RedirectDestination | null>(null)
 
   const isStopped = stoppedAtStep !== null
   // If the external job.status flipped to 'done' but user has stopped, keep stopped state
@@ -374,12 +376,25 @@ function AgentProgressWidget({ job, onDismiss }: { job: AgentJob; onDismiss: () 
                 {showDetails ? 'Hide details' : 'Show details'}
               </button>
             </div>
-            <button
-              onClick={onDismiss}
-              className="text-[11px] text-slate-500 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-400 transition-colors"
-            >
-              Dismiss
-            </button>
+            <div className="flex items-center gap-3">
+              {job.destination && (
+                <button
+                  onClick={() => setRedirectDest(job.destination!)}
+                  className="flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-400 underline underline-offset-2 transition-colors"
+                >
+                  {job.destination === 'forward-planner' ? 'Check in Forward Planner' : 'Check in Smart Book Builder'}
+                  <svg className="w-2.5 h-2.5 flex-shrink-0" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M2 5h6M5 2l3 3-3 3"/><path d="M7 2h2v2"/>
+                  </svg>
+                </button>
+              )}
+              <button
+                onClick={onDismiss}
+                className="text-[11px] text-slate-500 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-400 transition-colors"
+              >
+                Dismiss
+              </button>
+            </div>
           </div>
           {showDetails && (
             <div className="mt-2.5 pl-0.5 space-y-1.5">
@@ -394,6 +409,10 @@ function AgentProgressWidget({ job, onDismiss }: { job: AgentJob; onDismiss: () 
             </div>
           )}
         </div>
+      )}
+
+      {redirectDest && (
+        <RedirectModal destination={redirectDest} onClose={() => setRedirectDest(null)} />
       )}
     </div>
   )

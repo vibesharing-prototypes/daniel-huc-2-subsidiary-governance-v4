@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { BOOK_BUILDING_ITEMS, ENTITIES, type BookBuildingItem } from '@/components/data'
 import EntityLogo from '@/components/EntityLogo'
 import ConfirmActionModal from '@/components/ConfirmActionModal'
+import RedirectModal, { type RedirectDestination } from '@/components/RedirectModal'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
 
@@ -170,6 +171,7 @@ export default function BookBuilding() {
   const [selectedItem, setSelectedItem] = useState<BookBuildingItem | null>(null)
   const [confirmItem, setConfirmItem] = useState<BookBuildingItem | null>(null)
   const [itemStatus, setItemStatus] = useState<Record<number, ItemStatus>>({})
+  const [redirectDest, setRedirectDest] = useState<RedirectDestination | null>(null)
   const [showAll, setShowAll] = useState(false)
   const state = useProtoState()
   const agentActivity = useAgentActivity()
@@ -186,6 +188,7 @@ export default function BookBuilding() {
       entityShortName: itemEntities.length > 1 ? `${itemEntities.length} entities` : entity.shortName,
       title: item.title,
       workflowSteps: buildBookBuildingSteps(allApps),
+      destination: 'smart-book-builder',
     })
     setTimeout(() => {
       setItemStatus(prev => ({ ...prev, [item.id]: 'applied' }))
@@ -229,19 +232,25 @@ export default function BookBuilding() {
           return (
             <div
               key={item.id}
-              onClick={isApplying ? undefined : () => setSelectedItem(item)}
-              className="suggestion-card relative rounded-[20px] border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden cursor-pointer transition-all duration-300 hover:border-black/[0.14] dark:hover:border-zinc-600 hover:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.1)] hover:-translate-y-0.5"
+              onClick={isApplying || isApplied ? undefined : () => setSelectedItem(item)}
+              className={`suggestion-card relative rounded-[20px] border overflow-hidden transition-all duration-300 ${
+                isApplied
+                  ? 'border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/40 dark:bg-emerald-950/10 cursor-default'
+                  : 'border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 cursor-pointer hover:border-black/[0.14] dark:hover:border-zinc-600 hover:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.1)] hover:-translate-y-0.5'
+              }`}
               style={{ animationDelay: `${i * 120}ms` } as React.CSSProperties}
             >
-              {/* Breathing glow */}
+              {/* Glow — category colour when pending, emerald when done */}
               <div
                 className="suggestion-card-glow absolute top-0 left-0 right-0 h-20 pointer-events-none"
-                style={{ background: `radial-gradient(ellipse 80% 100% at 50% 0%, ${cfg.glowColor} 0%, transparent 100%)` }}
+                style={{ background: isApplied
+                  ? 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(16,185,129,0.07) 0%, transparent 100%)'
+                  : `radial-gradient(ellipse 80% 100% at 50% 0%, ${cfg.glowColor} 0%, transparent 100%)` }}
               />
 
               <div className={`relative p-[22px_24px] ${isApplying ? 'cursor-default' : ''}`}>
                 {/* Entity row */}
-                <div className={`flex items-center gap-2.5 mb-3.5 ${isApplying || isApplied ? 'opacity-40' : ''}`}>
+                <div className={`flex items-center gap-2.5 mb-3.5 ${isApplying ? 'opacity-40' : ''}`}>
                   <div className="flex -space-x-2 flex-shrink-0">
                     {itemEntities.map(e => <EntityLogo key={e.id} entity={e} size="sm" />)}
                   </div>
@@ -249,36 +258,49 @@ export default function BookBuilding() {
                     <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
                     <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
                   </div>
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 ${cfg.badgeClasses}`}>
-                    {cfg.badgeLabel}
-                  </span>
+                  {isApplied ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-400">
+                      <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+                      Applied
+                    </span>
+                  ) : (
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 ${cfg.badgeClasses}`}>
+                      {cfg.badgeLabel}
+                    </span>
+                  )}
                 </div>
 
                 {/* Title */}
-                <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying || isApplied ? 'opacity-40' : ''}`}>
+                <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
                   {item.title}
                 </p>
 
-                {/* Detail — always visible */}
-                <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying || isApplied ? 'opacity-40' : ''}`}>
+                {/* Detail */}
+                <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
                   {item.detail}
                 </p>
 
-                {/* Priority bar */}
-                <div className={`flex items-center gap-2 mt-4 mb-4 ${isApplying || isApplied ? 'opacity-40' : ''}`}>
+                {/* Bar — priority when pending, completion when applied */}
+                <div className="flex items-center gap-2 mt-4 mb-4">
                   <div className="flex-1 h-1 rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
-                    <div
-                      className="suggestion-bar-fill h-full rounded-full relative overflow-hidden"
-                      style={{
-                        '--bar-target': cfg.priorityFill,
-                        background: cfg.priorityGradient,
-                        animationDelay: `${500 + i * 120}ms`,
-                      } as React.CSSProperties}
-                    >
-                      <div className="suggestion-bar-shimmer absolute inset-0" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)' }} />
-                    </div>
+                    {isApplied ? (
+                      <div className="h-full w-full rounded-full bg-emerald-400 dark:bg-emerald-500" />
+                    ) : (
+                      <div
+                        className={`suggestion-bar-fill h-full rounded-full relative overflow-hidden ${isApplying ? 'opacity-40' : ''}`}
+                        style={{
+                          '--bar-target': cfg.priorityFill,
+                          background: cfg.priorityGradient,
+                          animationDelay: `${500 + i * 120}ms`,
+                        } as React.CSSProperties}
+                      >
+                        <div className="suggestion-bar-shimmer absolute inset-0" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)' }} />
+                      </div>
+                    )}
                   </div>
-                  <span className="text-[11px] font-semibold text-slate-400 dark:text-zinc-500">{cfg.priorityLabel}</span>
+                  <span className={`text-[11px] font-semibold ${isApplied ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-zinc-500'}`}>
+                    {isApplied ? 'Completed' : cfg.priorityLabel}
+                  </span>
                 </div>
 
                 {/* CTA row */}
@@ -291,12 +313,15 @@ export default function BookBuilding() {
                     <span className="text-[13px] text-slate-400">Applying…</span>
                   </div>
                 ) : isApplied ? (
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-4 h-4 text-emerald-500" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 8l3.5 3.5L13 5" />
+                  <button
+                    onClick={e => { e.stopPropagation(); setRedirectDest('smart-book-builder') }}
+                    className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
+                  >
+                    Check in Smart Book Builder
+                    <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 7h8M7 3l4 4-4 4"/><path d="M11 3h2v2"/>
                     </svg>
-                    <span className="text-[13px] font-medium text-emerald-600 dark:text-emerald-400">Done</span>
-                  </div>
+                  </button>
                 ) : (
                   <div className="flex gap-2">
                     <button
@@ -350,6 +375,10 @@ export default function BookBuilding() {
           />
         )
       })()}
+
+      {redirectDest && (
+        <RedirectModal destination={redirectDest} onClose={() => setRedirectDest(null)} />
+      )}
     </section>
   )
 }

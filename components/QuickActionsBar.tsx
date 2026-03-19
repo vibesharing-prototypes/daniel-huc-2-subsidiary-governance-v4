@@ -75,6 +75,8 @@ function IconAlignESG() {
 
 // ─── Action data ──────────────────────────────────────────────────────────────
 
+import { type RedirectDestination } from '@/components/AgentActivityContext'
+
 interface QuickAction {
   id: string
   label: string
@@ -88,6 +90,7 @@ interface QuickAction {
   actionLabel: string
   badgeLabel: string
   badgeClasses: string
+  destination: RedirectDestination
 }
 
 const QUICK_ACTIONS: QuickAction[] = [
@@ -102,6 +105,7 @@ const QUICK_ACTIONS: QuickAction[] = [
     actionLabel: 'Create Q3 plans',
     badgeLabel: 'Board Planning',
     badgeClasses: 'bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-950/40 dark:border-blue-800 dark:text-blue-400',
+    destination: 'forward-planner',
   },
   {
     id: '2027-plan',
@@ -114,6 +118,7 @@ const QUICK_ACTIONS: QuickAction[] = [
     actionLabel: 'Create 2027 plans',
     badgeLabel: 'Annual Planning',
     badgeClasses: 'bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-950/40 dark:border-indigo-800 dark:text-indigo-400',
+    destination: 'forward-planner',
   },
   {
     id: 'sync-presenters',
@@ -127,6 +132,7 @@ const QUICK_ACTIONS: QuickAction[] = [
     actionLabel: 'Sync all presenters',
     badgeLabel: 'Personnel',
     badgeClasses: 'bg-teal-50 border-teal-200 text-teal-700 dark:bg-teal-950/40 dark:border-teal-800 dark:text-teal-400',
+    destination: 'smart-book-builder',
   },
 ]
 
@@ -200,6 +206,7 @@ export default function QuickActionsBar() {
       entityShortName: `${entities.length} entities`,
       title: action.title,
       workflowSteps: steps,
+      destination: action.destination,
     })
     setTimeout(() => agentActivity.completeJob(jobId), 30_000)
   }
