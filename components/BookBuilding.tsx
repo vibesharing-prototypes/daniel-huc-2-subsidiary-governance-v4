@@ -6,6 +6,7 @@ import { BOOK_BUILDING_ITEMS, ENTITIES, type BookBuildingItem } from '@/componen
 import EntityLogo from '@/components/EntityLogo'
 import ConfirmActionModal from '@/components/ConfirmActionModal'
 import RedirectModal, { type RedirectDestination } from '@/components/RedirectModal'
+import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
 
@@ -164,13 +165,14 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
 // ─── Main component ───────────────────────────────────────────────────────────
 
 type ItemStatus = 'applying' | 'applied'
+type ItemStatusEntry = { status: ItemStatus; jobId?: string }
 
 const VISIBLE_COUNT = 3
 
 export default function BookBuilding() {
   const [selectedItem, setSelectedItem] = useState<BookBuildingItem | null>(null)
   const [confirmItem, setConfirmItem] = useState<BookBuildingItem | null>(null)
-  const [itemStatus, setItemStatus] = useState<Record<number, ItemStatus>>({})
+  const [itemStatus, setItemStatus] = useState<Record<number, ItemStatusEntry>>({})
   const [redirectDest, setRedirectDest] = useState<RedirectDestination | null>(null)
   const [showAll, setShowAll] = useState(false)
   const state = useProtoState()
@@ -180,7 +182,6 @@ export default function BookBuilding() {
     const itemEntities = item.entityIds.map(id => ENTITIES.find(en => en.id === id)!).filter(Boolean)
     const entity = itemEntities[0]
     if (!entity || !agentActivity) return
-    setItemStatus(prev => ({ ...prev, [item.id]: 'applying' }))
     const allApps = Array.from(new Set(itemEntities.flatMap(e => e.connectedApps)))
     const jobId = agentActivity.addJob({
       type: 'action',
@@ -190,8 +191,9 @@ export default function BookBuilding() {
       workflowSteps: buildBookBuildingSteps(allApps),
       destination: 'smart-book-builder',
     })
+    setItemStatus(prev => ({ ...prev, [item.id]: { status: 'applying', jobId } }))
     setTimeout(() => {
-      setItemStatus(prev => ({ ...prev, [item.id]: 'applied' }))
+      setItemStatus(prev => ({ ...prev, [item.id]: { status: 'applied' } }))
       agentActivity.completeJob(jobId)
     }, 30_000)
   }
@@ -225,9 +227,10 @@ export default function BookBuilding() {
         {visibleItems.map((item, i) => {
           const cfg = CATEGORY_CONFIG[item.category]
           const itemEntities = item.entityIds.map(id => ENTITIES.find(e => e.id === id)!).filter(Boolean)
-          const status = itemStatus[item.id]
-          const isApplying = status === 'applying'
-          const isApplied = status === 'applied'
+          const entry = itemStatus[item.id]
+          const isApplying = entry?.status === 'applying'
+          const isApplied = entry?.status === 'applied'
+          const job = isApplying && entry?.jobId ? (agentActivity?.jobs.find(j => j.id === entry.jobId) ?? null) : null
 
           return (
             <div
@@ -276,54 +279,29 @@ export default function BookBuilding() {
                 </p>
 
                 {/* Detail */}
-                <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
+                <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
                   {item.detail}
                 </p>
 
-                {/* Bar — priority when pending, completion when applied */}
-                <div className="flex items-center gap-2 mt-4 mb-4">
-                  <div className="flex-1 h-1 rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
-                    {isApplied ? (
-                      <div className="h-full w-full rounded-full bg-emerald-400 dark:bg-emerald-500" />
-                    ) : (
-                      <div
-                        className={`suggestion-bar-fill h-full rounded-full relative overflow-hidden ${isApplying ? 'opacity-40' : ''}`}
-                        style={{
-                          '--bar-target': cfg.priorityFill,
-                          background: cfg.priorityGradient,
-                          animationDelay: `${500 + i * 120}ms`,
-                        } as React.CSSProperties}
-                      >
-                        <div className="suggestion-bar-shimmer absolute inset-0" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)' }} />
-                      </div>
-                    )}
-                  </div>
-                  <span className={`text-[11px] font-semibold ${isApplied ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-zinc-500'}`}>
-                    {isApplied ? 'Completed' : cfg.priorityLabel}
-                  </span>
-                </div>
-
-                {/* CTA row */}
-                {isApplying ? (
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-4 h-4 animate-spin text-slate-400" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    <span className="text-[13px] text-slate-400">Applying…</span>
+                {/* Progress widget (inline, when applying) or CTA row */}
+                {isApplying && job ? (
+                  <div className="mt-4">
+                    <AgentProgressWidget job={job} />
                   </div>
                 ) : isApplied ? (
-                  <button
-                    onClick={e => { e.stopPropagation(); setRedirectDest('smart-book-builder') }}
-                    className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
-                  >
-                    Check in Smart Book Builder
-                    <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 7h8M7 3l4 4-4 4"/><path d="M11 3h2v2"/>
-                    </svg>
-                  </button>
+                  <div className="mt-4">
+                    <button
+                      onClick={e => { e.stopPropagation(); setRedirectDest('smart-book-builder') }}
+                      className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
+                    >
+                      Check in Smart Book Builder
+                      <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 7h8M7 3l4 4-4 4"/><path d="M11 3h2v2"/>
+                      </svg>
+                    </button>
+                  </div>
                 ) : (
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-4">
                     <button
                       onClick={e => handleCTA(e, item)}
                       className="flex-1 text-[14px] font-normal bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl py-[11px] px-4 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 dark:active:bg-zinc-200 transition-colors"

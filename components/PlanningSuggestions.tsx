@@ -5,6 +5,7 @@ import { PLANNING_SUGGESTIONS, ENTITIES, type PlanningSuggestion } from '@/compo
 import EntityLogo from '@/components/EntityLogo'
 import ConfirmActionModal from '@/components/ConfirmActionModal'
 import RedirectModal, { type RedirectDestination } from '@/components/RedirectModal'
+import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
 
@@ -215,11 +216,12 @@ function PlanningSuggestionModal({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 type CardStatus = 'applying' | 'applied'
+type CardStatusEntry = { status: CardStatus; jobId?: string }
 
 const VISIBLE_COUNT = 3
 
 export default function PlanningSuggestions() {
-  const [cardStatus, setCardStatus] = useState<Record<number, CardStatus>>({})
+  const [cardStatus, setCardStatus] = useState<Record<number, CardStatusEntry>>({})
   const [selectedSuggestion, setSelectedSuggestion] = useState<PlanningSuggestion | null>(null)
   const [confirmSuggestion, setConfirmSuggestion] = useState<PlanningSuggestion | null>(null)
   const [redirectDest, setRedirectDest] = useState<RedirectDestination | null>(null)
@@ -229,7 +231,6 @@ export default function PlanningSuggestions() {
 
   function handleApply(suggestion: PlanningSuggestion) {
     const id = suggestion.id
-    setCardStatus(prev => ({ ...prev, [id]: 'applying' }))
     const firstEntityId = suggestion.entities[0]?.entityId
     const entity = firstEntityId ? ENTITIES.find(e => e.id === firstEntityId) : null
     const destination: RedirectDestination = suggestion.sourceType === 'reorder' ? 'forward-planner' : 'smart-book-builder'
@@ -244,8 +245,9 @@ export default function PlanningSuggestions() {
           destination,
         })
       : null
+    setCardStatus(prev => ({ ...prev, [id]: { status: 'applying', jobId: jobId ?? undefined } }))
     setTimeout(() => {
-      setCardStatus(prev => ({ ...prev, [id]: 'applied' }))
+      setCardStatus(prev => ({ ...prev, [id]: { status: 'applied' } }))
       if (jobId && agentActivity) agentActivity.completeJob(jobId)
     }, 30_000)
   }
@@ -279,9 +281,10 @@ export default function PlanningSuggestions() {
 
       <div className="space-y-3">
         {visibleSuggestions.map((suggestion, i) => {
-          const status = cardStatus[suggestion.id]
-          const isApplying = status === 'applying'
-          const isApplied = status === 'applied'
+          const entry = cardStatus[suggestion.id]
+          const isApplying = entry?.status === 'applying'
+          const isApplied = entry?.status === 'applied'
+          const job = isApplying && entry?.jobId ? (agentActivity?.jobs.find(j => j.id === entry.jobId) ?? null) : null
           const isBatch = suggestion.entities.length > 1
           const cfg = SOURCE_CONFIG[suggestion.sourceType]
           const primaryEntity = ENTITIES.find(e => e.id === suggestion.entities[0]?.entityId)
@@ -369,50 +372,25 @@ export default function PlanningSuggestions() {
                   </div>
                 )}
 
-                {/* Bar — priority when pending, completion when applied */}
-                <div className="flex items-center gap-2 mt-4 mb-4">
-                  <div className="flex-1 h-1 rounded-full bg-slate-100 dark:bg-zinc-800 overflow-hidden">
-                    {isApplied ? (
-                      <div className="h-full w-full rounded-full bg-emerald-400 dark:bg-emerald-500" />
-                    ) : (
-                      <div
-                        className={`suggestion-bar-fill h-full rounded-full relative overflow-hidden ${isApplying ? 'opacity-40' : ''}`}
-                        style={{
-                          '--bar-target': cfg.priorityFill,
-                          background: cfg.priorityGradient,
-                          animationDelay: `${500 + i * 120}ms`,
-                        } as React.CSSProperties}
-                      >
-                        <div className="suggestion-bar-shimmer absolute inset-0" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)' }} />
-                      </div>
-                    )}
-                  </div>
-                  <span className={`text-[11px] font-semibold ${isApplied ? 'text-emerald-500 dark:text-emerald-400' : 'text-slate-400 dark:text-zinc-500'}`}>
-                    {isApplied ? 'Completed' : cfg.priorityLabel}
-                  </span>
-                </div>
-
-                {/* CTA row */}
-                {isApplying ? (
-                  <div className="flex items-center gap-1.5">
-                    <svg className="w-4 h-4 animate-spin text-slate-400" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    <span className="text-[13px] text-slate-400">Applying…</span>
+                {/* Progress widget (inline, when applying) or CTA row */}
+                {isApplying && job ? (
+                  <div className="mt-4">
+                    <AgentProgressWidget job={job} />
                   </div>
                 ) : isApplied ? (
-                  <button
-                    onClick={e => { e.stopPropagation(); setRedirectDest(suggestion.sourceType === 'reorder' ? 'forward-planner' : 'smart-book-builder') }}
-                    className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
-                  >
-                    {suggestion.sourceType === 'reorder' ? 'Check in Forward Planner' : 'Check in Smart Book Builder'}
-                    <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 7h8M7 3l4 4-4 4"/><path d="M11 3h2v2"/>
-                    </svg>
-                  </button>
+                  <div className="mt-4">
+                    <button
+                      onClick={e => { e.stopPropagation(); setRedirectDest(suggestion.sourceType === 'reorder' ? 'forward-planner' : 'smart-book-builder') }}
+                      className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
+                    >
+                      {suggestion.sourceType === 'reorder' ? 'Check in Forward Planner' : 'Check in Smart Book Builder'}
+                      <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 7h8M7 3l4 4-4 4"/><path d="M11 3h2v2"/>
+                      </svg>
+                    </button>
+                  </div>
                 ) : (
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-4">
                     <button
                       onClick={e => handleRowCTA(e, suggestion)}
                       className="flex-1 text-[14px] font-normal bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl py-[11px] px-4 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 dark:active:bg-zinc-200 transition-colors"
