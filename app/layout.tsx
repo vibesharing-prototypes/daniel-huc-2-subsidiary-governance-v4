@@ -14,10 +14,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "Multi-Entity Meeting Materials",
-    template: "%s — Multi-Entity Meeting Materials",
+    default: "Subsidiary Board Management",
+    template: "%s — Subsidiary Board Management",
   },
-  description: "Corporate Secretary Workspace",
+  description: "Subsidiary Board Management",
 };
 
 export default function RootLayout({
