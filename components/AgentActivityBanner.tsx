@@ -2,8 +2,6 @@
 
 import { BOOK_BUILDING_ITEMS, PLANNING_SUGGESTIONS } from '@/components/data'
 import { useProtoState } from '@/components/ProtoStateContext'
-import { useAgentActivity } from '@/components/AgentActivityContext'
-import AgentProgressWidget from '@/components/AgentProgressWidget'
 
 type ProtoState = 'calm' | 'busy' | 'critical'
 
@@ -90,22 +88,6 @@ const CONFIGS: Record<ProtoState, StateConfig> = {
   },
 }
 
-function CheckIcon() {
-  return (
-    <svg className="w-3 h-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 6l3 3 5-5" />
-    </svg>
-  )
-}
-
-function ChevronRight() {
-  return (
-    <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 2l4 4-4 4" />
-    </svg>
-  )
-}
-
 
 export default function AgentActivityBanner() {
   const state = useProtoState()
@@ -113,10 +95,6 @@ export default function AgentActivityBanner() {
   const items = BOOK_BUILDING_ITEMS.filter(i => i.states.includes(state))
   const suggestions = PLANNING_SUGGESTIONS.filter(s => s.states.includes(state))
   const total = items.length
-
-  const agentActivity = useAgentActivity()
-  const jobs = agentActivity?.jobs ?? []
-  const activeJob = jobs.find(j => j.status === 'running') ?? jobs.find(j => j.status === 'done')
 
   const headline = cfg.headline.replace('{total}', String(total))
 
@@ -154,7 +132,7 @@ export default function AgentActivityBanner() {
         </p>
 
         {/* Metrics */}
-        <div className="flex justify-center gap-4 mb-7">
+        <div className="flex justify-center gap-4">
           {metrics.map((m, i) => (
             <div
               key={i}
@@ -166,61 +144,6 @@ export default function AgentActivityBanner() {
           ))}
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-zinc-700 mb-5" />
-
-        {/* Bottom section: progress widget or static workflow */}
-        {activeJob ? (
-          <AgentProgressWidget
-            job={activeJob}
-            onDismiss={() => agentActivity!.removeJob(activeJob.id)}
-          />
-        ) : cfg.workflow ? (
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-slate-400 dark:text-zinc-600">
-              Response Workflow
-            </span>
-            <div className="flex items-center gap-1.5 flex-wrap justify-center">
-              {cfg.workflow.map((step, i) => {
-                const isComplete = i < cfg.wfComplete
-                const isCurrent = i === cfg.wfCurrent
-
-                return (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <div
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-                        isComplete
-                          ? 'border-emerald-200 dark:border-emerald-800/60 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400'
-                          : isCurrent
-                          ? 'border-amber-200 dark:border-amber-800/60 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400'
-                          : 'border-slate-200 dark:border-zinc-800 bg-transparent text-slate-500 dark:text-zinc-600'
-                      }`}
-                    >
-                      {isComplete && (
-                        <span className="text-emerald-500 dark:text-emerald-400">
-                          <CheckIcon />
-                        </span>
-                      )}
-                      {isCurrent && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-                      )}
-                      {step}
-                    </div>
-                    {i < cfg.workflow!.length - 1 && (
-                      <span className="text-slate-400 dark:text-zinc-700">
-                        <ChevronRight />
-                      </span>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        ) : (
-          <p className="text-center text-[11px] tracking-[0.04em] text-slate-400 dark:text-zinc-600">
-            No items require review. Agents are running normally.
-          </p>
-        )}
       </div>
     </div>
   )
