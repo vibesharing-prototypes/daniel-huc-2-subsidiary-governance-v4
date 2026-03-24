@@ -4,9 +4,10 @@ import { ENTITIES } from '@/components/data'
 import { SECTIONS } from '@/components/sections'
 import DocumentEditor from '@/components/DocumentEditor'
 
-export function generateMetadata({ params }: { params: { id: string; section: string } }): Metadata {
-  const entity = ENTITIES.find(e => e.id === Number(params.id))
-  const section = SECTIONS[Number(params.section)]
+export async function generateMetadata({ params }: { params: Promise<{ id: string; section: string }> }): Promise<Metadata> {
+  const { id, section: sectionParam } = await params
+  const entity = ENTITIES.find(e => e.id === Number(id))
+  const section = SECTIONS[Number(sectionParam)]
   return { title: entity && section ? `${section.title} · ${entity.shortName}` : 'Edit' }
 }
 
@@ -20,15 +21,16 @@ export function generateStaticParams() {
   return params
 }
 
-export default function EditPage({
+export default async function EditPage({
   params,
 }: {
-  params: { id: string; section: string }
+  params: Promise<{ id: string; section: string }>
 }) {
-  const entity = ENTITIES.find(e => e.id === Number(params.id))
+  const { id, section: sectionParam } = await params
+  const entity = ENTITIES.find(e => e.id === Number(id))
   if (!entity) notFound()
 
-  const sectionIndex = Number(params.section)
+  const sectionIndex = Number(sectionParam)
   if (sectionIndex < 0 || sectionIndex >= SECTIONS.length) notFound()
 
   return <DocumentEditor entity={entity} sectionIndex={sectionIndex} />

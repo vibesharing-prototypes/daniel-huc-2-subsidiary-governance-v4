@@ -11,13 +11,15 @@ export function generateStaticParams() {
   return ENTITIES.map(entity => ({ id: String(entity.id) }))
 }
 
-export function generateMetadata({ params }: { params: { id: string } }): Metadata {
-  const entity = ENTITIES.find(e => e.id === Number(params.id))
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const entity = ENTITIES.find(e => e.id === Number(id))
   return { title: entity?.shortName ?? 'Entity' }
 }
 
-export default function EntityPage({ params }: { params: { id: string } }) {
-  const entity = ENTITIES.find(e => e.id === Number(params.id))
+export default async function EntityPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const entity = ENTITIES.find(e => e.id === Number(id))
   if (!entity) notFound()
 
   return (

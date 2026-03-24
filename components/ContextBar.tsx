@@ -96,22 +96,26 @@ export default function ContextBar({ currentEntityId }: ContextBarProps) {
       {/* Header strip */}
       <div className="px-6 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-5">
-          <span className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
-            {ENTITIES.length} Entities
-          </span>
+          {MARKETING_MODE ? (
+            <SkeletonBar w={80} h={8} opacity={0.16} />
+          ) : (
+            <span className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
+              {ENTITIES.length} Entities
+            </span>
+          )}
           <span className="h-4 w-px bg-slate-300 dark:bg-zinc-700" />
           <span className="text-sm text-slate-500 dark:text-zinc-400">Q1 2026</span>
           <span className="h-4 w-px bg-slate-300 dark:bg-zinc-700" />
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              {inProgress} in progress
-            </span>
+            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+              {MARKETING_MODE ? <SkeletonBar w={60} h={6} opacity={0.22} /> : `${inProgress} in progress`}
+            </div>
             {approved > 0 && (
-              <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                {approved} approved
-              </span>
+              <div className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+                {MARKETING_MODE ? <SkeletonBar w={52} h={6} opacity={0.22} /> : `${approved} approved`}
+              </div>
             )}
           </div>
         </div>

@@ -101,7 +101,7 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-[2px]" />
       <div className="relative bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md" onClick={e => e.stopPropagation()}>
         <button
@@ -120,8 +120,17 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
               {entities.map(e => <EntityLogo key={e.id} entity={e} size="md" />)}
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] text-slate-500 leading-snug">{entities.length} {entities.length === 1 ? 'entity' : 'entities'}</p>
-              <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100 leading-snug">{entities.map(e => e.shortName).join(', ')}</p>
+              {MARKETING_MODE ? (
+                <div className="flex flex-col gap-1.5 py-0.5">
+                  <SkeletonBar w={40} h={5} opacity={0.12} />
+                  <SkeletonBar w={140} h={8} opacity={0.18} />
+                </div>
+              ) : (
+                <>
+                  <p className="text-[11px] text-slate-500 leading-snug">{entities.length} {entities.length === 1 ? 'entity' : 'entities'}</p>
+                  <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100 leading-snug">{entities.map(e => e.shortName).join(', ')}</p>
+                </>
+              )}
             </div>
           </div>
 
@@ -129,12 +138,27 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
             {cfg.badgeLabel}
           </span>
 
-          <h3 className="text-base font-semibold text-slate-900 dark:text-zinc-100 mt-3 mb-2 leading-snug">
-            {item.title}
-          </h3>
-          <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
-            {item.detail}
-          </p>
+          {MARKETING_MODE ? (
+            <div className="mt-3 mb-2 flex flex-col gap-1.5">
+              <SkeletonBar w="90%" h={10} opacity={0.16} />
+              <SkeletonBar w="70%" h={10} opacity={0.13} />
+            </div>
+          ) : (
+            <h3 className="text-base font-semibold text-slate-900 dark:text-zinc-100 mt-3 mb-2 leading-snug">
+              {item.title}
+            </h3>
+          )}
+          {MARKETING_MODE ? (
+            <div className="flex flex-col gap-1.5">
+              <SkeletonBar w="95%" h={6} opacity={0.12} />
+              <SkeletonBar w="80%" h={6} opacity={0.1} />
+              <SkeletonBar w="60%" h={6} opacity={0.08} />
+            </div>
+          ) : (
+            <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed">
+              {item.detail}
+            </p>
+          )}
         </div>
 
         <div className="px-6 pb-6 pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 dark:border-zinc-800">
@@ -260,9 +284,8 @@ export default function BookBuilding() {
                   </div>
                   <div className="flex-1 min-w-0">
                     {MARKETING_MODE ? (
-                      <div className="flex flex-col gap-1 py-0.5">
+                      <div className="py-0.5">
                         <SkeletonBar w="75%" h={7} opacity={0.18} />
-                        <SkeletonBar w="40%" h={5} opacity={0.12} />
                       </div>
                     ) : (
                       <>
@@ -285,9 +308,8 @@ export default function BookBuilding() {
 
                 {/* Title */}
                 {MARKETING_MODE ? (
-                  <div className={`flex flex-col gap-1.5 mb-2 ${isApplying ? 'opacity-40' : ''}`}>
-                    <SkeletonBar w="88%" h={10} opacity={0.16} />
-                    <SkeletonBar w="70%" h={10} opacity={0.13} />
+                  <div className={`mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    <SkeletonBar w="82%" h={10} opacity={0.16} />
                   </div>
                 ) : (
                   <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
@@ -298,9 +320,8 @@ export default function BookBuilding() {
                 {/* Detail */}
                 {MARKETING_MODE ? (
                   <div className="flex flex-col gap-1.5">
-                    <SkeletonBar w="95%" h={6} opacity={0.12} />
-                    <SkeletonBar w="80%" h={6} opacity={0.1} />
-                    <SkeletonBar w="60%" h={6} opacity={0.08} />
+                    <SkeletonBar w="92%" h={6} opacity={0.12} />
+                    <SkeletonBar w="65%" h={6} opacity={0.09} />
                   </div>
                 ) : (
                   <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">

@@ -123,23 +123,15 @@ export default function AgentActivityBanner() {
         </div>
 
         {/* Headline */}
-        {MARKETING_MODE ? (
-          <div className="flex flex-col items-center gap-3 mb-3">
-            <SkeletonBar w="52%" h={36} opacity={0.08} />
-            <SkeletonBar w="42%" h={36} opacity={0.06} />
-          </div>
-        ) : (
-          <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-900 dark:text-white leading-[1.15] mb-3">
-            {headline}
-          </h2>
-        )}
+        <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-900 dark:text-white leading-[1.15] mb-3">
+          {headline}
+        </h2>
 
         {/* Subtext */}
         {MARKETING_MODE ? (
           <div className="flex flex-col items-center gap-2 mb-7">
-            <SkeletonBar w="68%" h={8} opacity={0.1} />
-            <SkeletonBar w="55%" h={8} opacity={0.08} />
-            <SkeletonBar w="38%" h={8} opacity={0.06} />
+            <SkeletonBar w="60%" h={8} opacity={0.1} />
+            <SkeletonBar w="44%" h={8} opacity={0.07} />
           </div>
         ) : (
           <p className="text-center text-[13px] text-slate-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-7">

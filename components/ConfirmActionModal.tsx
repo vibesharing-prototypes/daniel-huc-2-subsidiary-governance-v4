@@ -2,6 +2,7 @@
 
 import { ENTITIES } from '@/components/data'
 import EntityLogo from '@/components/EntityLogo'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 export interface ConfirmActionModalProps {
   entityIds: number[]
@@ -38,7 +39,7 @@ export default function ConfirmActionModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-6"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-[3px]" />
@@ -60,9 +61,16 @@ export default function ConfirmActionModal({
                   {n} {n === 1 ? 'board pack' : 'board packs'} will be updated
                 </span>
               </div>
-              <h2 className="text-[22px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.25]">
-                {title}
-              </h2>
+              {MARKETING_MODE ? (
+                <div className="flex flex-col gap-2 mt-1">
+                  <SkeletonBar w="85%" h={14} opacity={0.16} />
+                  <SkeletonBar w="65%" h={14} opacity={0.12} />
+                </div>
+              ) : (
+                <h2 className="text-[22px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.25]">
+                  {title}
+                </h2>
+              )}
             </div>
             <button
               onClick={onClose}
@@ -89,20 +97,33 @@ export default function ConfirmActionModal({
                 <div key={entity.id} className="flex items-center gap-4 px-5 py-4 bg-white dark:bg-zinc-900">
                   <EntityLogo entity={entity} size="lg" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
-                      {entity.name}
-                    </p>
-                    <p className="text-[13px] text-slate-500 dark:text-zinc-400 mt-0.5">
-                      {entity.country}
-                    </p>
+                    {MARKETING_MODE ? (
+                      <div className="flex flex-col gap-1.5 py-0.5">
+                        <SkeletonBar w="70%" h={8} opacity={0.18} />
+                        <SkeletonBar w="45%" h={6} opacity={0.12} />
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
+                          {entity.name}
+                        </p>
+                        <p className="text-[13px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                          {entity.country}
+                        </p>
+                      </>
+                    )}
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wide">
                       Next board
                     </p>
-                    <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-300 mt-0.5">
-                      {entity.nextBoard}
-                    </p>
+                    {MARKETING_MODE ? (
+                      <div className="mt-0.5 flex justify-end"><SkeletonBar w={60} h={7} opacity={0.14} /></div>
+                    ) : (
+                      <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-300 mt-0.5">
+                        {entity.nextBoard}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -114,9 +135,17 @@ export default function ConfirmActionModal({
             <p className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-widest mb-3">
               What will change
             </p>
-            <p className="text-[14px] text-slate-600 dark:text-zinc-300 leading-relaxed">
-              {description}
-            </p>
+            {MARKETING_MODE ? (
+              <div className="flex flex-col gap-1.5">
+                <SkeletonBar w="95%" h={6} opacity={0.12} />
+                <SkeletonBar w="82%" h={6} opacity={0.1} />
+                <SkeletonBar w="60%" h={6} opacity={0.08} />
+              </div>
+            ) : (
+              <p className="text-[14px] text-slate-600 dark:text-zinc-300 leading-relaxed">
+                {description}
+              </p>
+            )}
 
             {affectedSection && (
               <div className="mt-3 inline-flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700">
@@ -124,9 +153,13 @@ export default function ConfirmActionModal({
                   <rect x="3" y="2" width="10" height="12" rx="1.5" />
                   <path d="M6 6h4M6 9h4M6 12h2" />
                 </svg>
-                <span className="text-[12px] font-medium text-slate-600 dark:text-zinc-300">
-                  Section: {affectedSection}
-                </span>
+                {MARKETING_MODE ? (
+                  <SkeletonBar w={80} h={6} opacity={0.16} />
+                ) : (
+                  <span className="text-[12px] font-medium text-slate-600 dark:text-zinc-300">
+                    Section: {affectedSection}
+                  </span>
+                )}
               </div>
             )}
 
@@ -135,9 +168,17 @@ export default function ConfirmActionModal({
                 <p className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-widest mb-2">
                   Proposed edit
                 </p>
-                <p className="text-[13px] text-slate-700 dark:text-zinc-300 leading-relaxed">
-                  {proposedEdit}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className="flex flex-col gap-1.5">
+                    <SkeletonBar w="95%" h={6} opacity={0.14} />
+                    <SkeletonBar w="78%" h={6} opacity={0.11} />
+                    <SkeletonBar w="55%" h={6} opacity={0.09} />
+                  </div>
+                ) : (
+                  <p className="text-[13px] text-slate-700 dark:text-zinc-300 leading-relaxed">
+                    {proposedEdit}
+                  </p>
+                )}
               </div>
             )}
           </div>

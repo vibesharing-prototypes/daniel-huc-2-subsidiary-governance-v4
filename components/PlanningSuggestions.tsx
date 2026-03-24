@@ -129,7 +129,7 @@ function PlanningSuggestionModal({
   const isBatch = suggestion.entities.length > 1
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-[2px]" />
       <div className="relative bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-lg" onClick={e => e.stopPropagation()}>
         <button
@@ -151,18 +151,35 @@ function PlanningSuggestionModal({
               {entities.map(entity => (
                 <div key={entity.id} className="flex items-center gap-1.5">
                   <EntityLogo entity={entity} size="sm" />
-                  <span className="text-xs text-slate-500 dark:text-zinc-400 leading-snug">{entity.shortName}</span>
+                  {MARKETING_MODE
+                    ? <SkeletonBar w={60} h={6} opacity={0.18} />
+                    : <span className="text-xs text-slate-500 dark:text-zinc-400 leading-snug">{entity.shortName}</span>}
                 </div>
               ))}
             </div>
           </div>
 
-          <h3 className="text-base font-semibold text-slate-900 dark:text-zinc-100 mb-2 leading-snug">
-            {suggestion.title}
-          </h3>
-          <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed mb-4">
-            {suggestion.reason}
-          </p>
+          {MARKETING_MODE ? (
+            <div className="flex flex-col gap-1.5 mb-2">
+              <SkeletonBar w="90%" h={10} opacity={0.16} />
+              <SkeletonBar w="70%" h={10} opacity={0.13} />
+            </div>
+          ) : (
+            <h3 className="text-base font-semibold text-slate-900 dark:text-zinc-100 mb-2 leading-snug">
+              {suggestion.title}
+            </h3>
+          )}
+          {MARKETING_MODE ? (
+            <div className="flex flex-col gap-1.5 mb-4">
+              <SkeletonBar w="95%" h={6} opacity={0.12} />
+              <SkeletonBar w="80%" h={6} opacity={0.1} />
+              <SkeletonBar w="60%" h={6} opacity={0.08} />
+            </div>
+          ) : (
+            <p className="text-sm text-slate-500 dark:text-zinc-400 leading-relaxed mb-4">
+              {suggestion.reason}
+            </p>
+          )}
 
           {suggestion.affectedSection && (
             <div className="mb-4">
@@ -175,9 +192,11 @@ function PlanningSuggestionModal({
                     <rect x="3" y="2" width="10" height="12" rx="1.5" />
                     <path d="M6 6h4M6 9h4M6 12h2" />
                   </svg>
-                  <span className="text-xs text-slate-600 dark:text-zinc-300 font-medium">{suggestion.affectedSection}</span>
+                  {MARKETING_MODE
+                    ? <SkeletonBar w={80} h={6} opacity={0.16} />
+                    : <span className="text-xs text-slate-600 dark:text-zinc-300 font-medium">{suggestion.affectedSection}</span>}
                 </div>
-                {isBatch && (
+                {isBatch && !MARKETING_MODE && (
                   <span className="text-xs text-slate-500">across {suggestion.entities.length} board packs</span>
                 )}
               </div>
@@ -190,9 +209,17 @@ function PlanningSuggestionModal({
                 Proposed Edit
               </p>
               <div className="bg-slate-50 dark:bg-zinc-800 rounded-xl p-4 border border-slate-200 dark:border-zinc-700">
-                <p className="text-sm text-slate-700 dark:text-zinc-300 leading-relaxed">
-                  {suggestion.suggestedPrompt}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className="flex flex-col gap-1.5">
+                    <SkeletonBar w="95%" h={6} opacity={0.14} />
+                    <SkeletonBar w="80%" h={6} opacity={0.11} />
+                    <SkeletonBar w="55%" h={6} opacity={0.09} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-700 dark:text-zinc-300 leading-relaxed">
+                    {suggestion.suggestedPrompt}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -320,9 +347,8 @@ export default function PlanningSuggestions() {
                   <div className="flex-1 min-w-0">
                     {primaryEntity && (
                       MARKETING_MODE ? (
-                        <div className="flex flex-col gap-1 py-0.5">
+                        <div className="py-0.5">
                           <SkeletonBar w="75%" h={7} opacity={0.18} />
-                          <SkeletonBar w="55%" h={5} opacity={0.12} />
                         </div>
                       ) : (
                         <>
@@ -349,9 +375,8 @@ export default function PlanningSuggestions() {
 
                 {/* Title */}
                 {MARKETING_MODE ? (
-                  <div className={`flex flex-col gap-1.5 mb-2 ${isApplying ? 'opacity-40' : ''}`}>
-                    <SkeletonBar w="88%" h={10} opacity={0.16} />
-                    <SkeletonBar w="68%" h={10} opacity={0.13} />
+                  <div className={`mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    <SkeletonBar w="82%" h={10} opacity={0.16} />
                   </div>
                 ) : (
                   <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
@@ -362,9 +387,8 @@ export default function PlanningSuggestions() {
                 {/* Reason — always visible */}
                 {MARKETING_MODE ? (
                   <div className={`flex flex-col gap-1.5 ${isApplying ? 'opacity-40' : ''}`}>
-                    <SkeletonBar w="95%" h={6} opacity={0.12} />
-                    <SkeletonBar w="78%" h={6} opacity={0.1} />
-                    <SkeletonBar w="55%" h={6} opacity={0.08} />
+                    <SkeletonBar w="92%" h={6} opacity={0.12} />
+                    <SkeletonBar w="65%" h={6} opacity={0.09} />
                   </div>
                 ) : (
                   <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>

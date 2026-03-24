@@ -22,13 +22,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
             : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 rounded-bl-sm'
         }`}
       >
-        {MARKETING_MODE ? (
-          <div className="flex flex-col gap-1.5 py-0.5">
-            <SkeletonBar w="95%" h={6} opacity={isUser ? 0.3 : 0.18} />
-            <SkeletonBar w="75%" h={6} opacity={isUser ? 0.22 : 0.13} />
-            {!isUser && <SkeletonBar w="55%" h={6} opacity={0.1} />}
-          </div>
-        ) : message.content}
+        {message.content}
       </div>
     </div>
   )
