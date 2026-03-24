@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { PROMPT_STARTERS, INITIAL_MESSAGES, type ChatMessage } from '@/components/data'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 interface SidebarProps {
   isOpen?: boolean
@@ -21,7 +22,13 @@ function MessageBubble({ message }: { message: ChatMessage }) {
             : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 rounded-bl-sm'
         }`}
       >
-        {message.content}
+        {MARKETING_MODE ? (
+          <div className="flex flex-col gap-1.5 py-0.5">
+            <SkeletonBar w="95%" h={6} opacity={isUser ? 0.3 : 0.18} />
+            <SkeletonBar w="75%" h={6} opacity={isUser ? 0.22 : 0.13} />
+            {!isUser && <SkeletonBar w="55%" h={6} opacity={0.1} />}
+          </div>
+        ) : message.content}
       </div>
     </div>
   )
@@ -111,7 +118,7 @@ export default function Sidebar({
             onClick={() => handleSendMessage(prompt)}
             className="w-full text-left text-xs text-slate-600 dark:text-zinc-400 bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 active:bg-slate-200 dark:active:bg-zinc-600 px-3 py-2 rounded border border-slate-200 dark:border-zinc-700 transition-colors leading-snug"
           >
-            {prompt}
+            {MARKETING_MODE ? <SkeletonBar w="85%" h={6} opacity={0.16} /> : prompt}
           </button>
         ))}
       </div>

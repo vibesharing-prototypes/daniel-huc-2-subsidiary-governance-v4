@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ENTITIES } from '@/components/data'
 import EntityLogo from '@/components/EntityLogo'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 const MILESTONES = [
   'Agenda set',
@@ -66,9 +67,13 @@ function MilestoneTracker({ completion }: { completion: number }) {
         })}
       </div>
       {currentIdx >= 0 ? (
-        <span className="text-[11px] font-medium leading-none text-zinc-500 dark:text-zinc-400">
-          {MILESTONES[currentIdx]}
-        </span>
+        MARKETING_MODE ? (
+          <div><SkeletonBar w={60} h={5} opacity={0.12} /></div>
+        ) : (
+          <span className="text-[11px] font-medium leading-none text-zinc-500 dark:text-zinc-400">
+            {MILESTONES[currentIdx]}
+          </span>
+        )
       ) : (
         <span className="text-[10px] font-medium leading-none text-zinc-400 dark:text-zinc-600">Not started</span>
       )}
@@ -163,18 +168,31 @@ export default function ContextBar({ currentEntityId }: ContextBarProps) {
                     <div className="flex items-center gap-3 min-w-0">
                       <EntityLogo entity={entity} />
                       <div className="min-w-0">
-                        <p className={`text-[11px] font-semibold leading-snug truncate ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-zinc-200'}`}>
-                          {entity.shortName}
-                        </p>
-                        <p className="text-[10px] text-slate-400 dark:text-zinc-500 truncate mt-0.5">{entity.name}</p>
+                        {MARKETING_MODE ? (
+                          <div className="flex flex-col gap-1 py-0.5">
+                            <SkeletonBar w={80} h={7} opacity={0.18} />
+                            <SkeletonBar w={120} h={5} opacity={0.12} />
+                          </div>
+                        ) : (
+                          <>
+                            <p className={`text-[11px] font-semibold leading-snug truncate ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-zinc-200'}`}>
+                              {entity.shortName}
+                            </p>
+                            <p className="text-[10px] text-slate-400 dark:text-zinc-500 truncate mt-0.5">{entity.name}</p>
+                          </>
+                        )}
                       </div>
                     </div>
 
                     {/* Country */}
-                    <span className="text-[10px] text-slate-500 dark:text-zinc-500">{entity.country}</span>
+                    {MARKETING_MODE
+                      ? <SkeletonBar w={48} h={5} opacity={0.14} />
+                      : <span className="text-[10px] text-slate-500 dark:text-zinc-500">{entity.country}</span>}
 
                     {/* Next board */}
-                    <span className="text-[10px] text-slate-600 dark:text-zinc-400 font-medium">{entity.nextBoard}</span>
+                    {MARKETING_MODE
+                      ? <SkeletonBar w={40} h={5} opacity={0.14} />
+                      : <span className="text-[10px] text-slate-600 dark:text-zinc-400 font-medium">{entity.nextBoard}</span>}
 
                     {/* Milestone tracker */}
                     <MilestoneTracker completion={entity.completion} />

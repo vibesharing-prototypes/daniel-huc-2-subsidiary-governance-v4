@@ -8,6 +8,7 @@ import RedirectModal, { type RedirectDestination } from '@/components/RedirectMo
 import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 // ─── Agent workflow steps ─────────────────────────────────────────────────────
 
@@ -318,13 +319,20 @@ export default function PlanningSuggestions() {
                   ) : null}
                   <div className="flex-1 min-w-0">
                     {primaryEntity && (
-                      <>
-                        <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100">
-                          {primaryEntity.name}
-                          {isBatch && <span className="text-slate-400 dark:text-zinc-500 font-normal"> + {suggestion.entities.length - 1} more</span>}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{primaryEntity.country} · Board: {primaryEntity.nextBoard}</p>
-                      </>
+                      MARKETING_MODE ? (
+                        <div className="flex flex-col gap-1 py-0.5">
+                          <SkeletonBar w="75%" h={7} opacity={0.18} />
+                          <SkeletonBar w="55%" h={5} opacity={0.12} />
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100">
+                            {primaryEntity.name}
+                            {isBatch && <span className="text-slate-400 dark:text-zinc-500 font-normal"> + {suggestion.entities.length - 1} more</span>}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{primaryEntity.country} · Board: {primaryEntity.nextBoard}</p>
+                        </>
+                      )
                     )}
                   </div>
                   {isApplied ? (
@@ -340,14 +348,29 @@ export default function PlanningSuggestions() {
                 </div>
 
                 {/* Title */}
-                <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
-                  {suggestion.title}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className={`flex flex-col gap-1.5 mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    <SkeletonBar w="88%" h={10} opacity={0.16} />
+                    <SkeletonBar w="68%" h={10} opacity={0.13} />
+                  </div>
+                ) : (
+                  <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    {suggestion.title}
+                  </p>
+                )}
 
                 {/* Reason — always visible */}
-                <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
-                  {suggestion.reason}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className={`flex flex-col gap-1.5 ${isApplying ? 'opacity-40' : ''}`}>
+                    <SkeletonBar w="95%" h={6} opacity={0.12} />
+                    <SkeletonBar w="78%" h={6} opacity={0.1} />
+                    <SkeletonBar w="55%" h={6} opacity={0.08} />
+                  </div>
+                ) : (
+                  <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
+                    {suggestion.reason}
+                  </p>
+                )}
 
                 {/* Hover-reveal block */}
                 {hasHoverReveal(suggestion) && !isApplied && (
@@ -359,14 +382,25 @@ export default function PlanningSuggestions() {
                       style={{ borderColor: cfg.revealBorderColor }}
                     >
                       {suggestion.affectedSection && (
-                        <p className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide mb-1">
-                          Affected section: {suggestion.affectedSection}
-                        </p>
+                        MARKETING_MODE ? (
+                          <div className="mb-1"><SkeletonBar w={120} h={6} opacity={0.14} /></div>
+                        ) : (
+                          <p className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide mb-1">
+                            Affected section: {suggestion.affectedSection}
+                          </p>
+                        )
                       )}
                       {suggestion.suggestedPrompt && (
-                        <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
-                          {suggestion.suggestedPrompt}
-                        </p>
+                        MARKETING_MODE ? (
+                          <div className="flex flex-col gap-1">
+                            <SkeletonBar w="90%" h={5} opacity={0.1} />
+                            <SkeletonBar w="70%" h={5} opacity={0.08} />
+                          </div>
+                        ) : (
+                          <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+                            {suggestion.suggestedPrompt}
+                          </p>
+                        )
                       )}
                     </div>
                   </div>

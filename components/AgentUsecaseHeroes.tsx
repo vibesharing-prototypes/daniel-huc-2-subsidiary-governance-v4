@@ -1,4 +1,5 @@
 import React from 'react'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 const HEROES = [
   {
@@ -119,9 +120,18 @@ export default function AgentUsecaseHeroes() {
                 </h3>
 
                 {/* Body */}
-                <p className="text-[11.5px] text-slate-500 dark:text-zinc-400 leading-relaxed flex-1">
-                  {hero.body}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className="flex flex-col gap-1.5 flex-1">
+                    <SkeletonBar w="95%" h={6} opacity={0.12} />
+                    <SkeletonBar w="85%" h={6} opacity={0.1} />
+                    <SkeletonBar w="70%" h={6} opacity={0.09} />
+                    <SkeletonBar w="55%" h={6} opacity={0.08} />
+                  </div>
+                ) : (
+                  <p className="text-[11.5px] text-slate-500 dark:text-zinc-400 leading-relaxed flex-1">
+                    {hero.body}
+                  </p>
+                )}
 
                 {/* Divider */}
                 <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800 my-4" />
@@ -130,8 +140,17 @@ export default function AgentUsecaseHeroes() {
                 <div className="flex gap-0 mb-4">
                   {hero.detail.map((d, i) => (
                     <div key={d.label} className={`flex-1 ${i > 0 ? 'border-l border-slate-100 dark:border-zinc-800 pl-3' : 'pr-3'}`}>
-                      <div className={`text-lg font-semibold tabular-nums leading-none ${s.value}`}>{d.value}</div>
-                      <div className="text-[10px] text-slate-400 dark:text-zinc-600 mt-1">{d.label}</div>
+                      {MARKETING_MODE ? (
+                        <>
+                          <div className="mb-1.5"><SkeletonBar w={24} h={14} opacity={0.16} /></div>
+                          <SkeletonBar w={32} h={6} opacity={0.1} />
+                        </>
+                      ) : (
+                        <>
+                          <div className={`text-lg font-semibold tabular-nums leading-none ${s.value}`}>{d.value}</div>
+                          <div className="text-[10px] text-slate-400 dark:text-zinc-600 mt-1">{d.label}</div>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>

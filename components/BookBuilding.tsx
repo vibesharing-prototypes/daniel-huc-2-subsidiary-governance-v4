@@ -9,6 +9,7 @@ import RedirectModal, { type RedirectDestination } from '@/components/RedirectMo
 import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 // ─── Agent workflow steps ────────────────────────────────────────────────────
 
@@ -258,8 +259,17 @@ export default function BookBuilding() {
                     {itemEntities.map(e => <EntityLogo key={e.id} entity={e} size="sm" />)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
+                    {MARKETING_MODE ? (
+                      <div className="flex flex-col gap-1 py-0.5">
+                        <SkeletonBar w="75%" h={7} opacity={0.18} />
+                        <SkeletonBar w="40%" h={5} opacity={0.12} />
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
+                      </>
+                    )}
                   </div>
                   {isApplied ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-400">
@@ -274,14 +284,29 @@ export default function BookBuilding() {
                 </div>
 
                 {/* Title */}
-                <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
-                  {item.title}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className={`flex flex-col gap-1.5 mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    <SkeletonBar w="88%" h={10} opacity={0.16} />
+                    <SkeletonBar w="70%" h={10} opacity={0.13} />
+                  </div>
+                ) : (
+                  <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    {item.title}
+                  </p>
+                )}
 
                 {/* Detail */}
-                <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
-                  {item.detail}
-                </p>
+                {MARKETING_MODE ? (
+                  <div className="flex flex-col gap-1.5">
+                    <SkeletonBar w="95%" h={6} opacity={0.12} />
+                    <SkeletonBar w="80%" h={6} opacity={0.1} />
+                    <SkeletonBar w="60%" h={6} opacity={0.08} />
+                  </div>
+                ) : (
+                  <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
+                    {item.detail}
+                  </p>
+                )}
 
                 {/* Progress widget (inline, when applying) or CTA row */}
                 {isApplying && job ? (

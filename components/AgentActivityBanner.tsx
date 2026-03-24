@@ -2,6 +2,7 @@
 
 import { BOOK_BUILDING_ITEMS, PLANNING_SUGGESTIONS } from '@/components/data'
 import { useProtoState } from '@/components/ProtoStateContext'
+import { MARKETING_MODE, SkeletonBar } from '@/components/marketing'
 
 type ProtoState = 'calm' | 'busy' | 'critical'
 
@@ -122,14 +123,29 @@ export default function AgentActivityBanner() {
         </div>
 
         {/* Headline */}
-        <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-900 dark:text-white leading-[1.15] mb-3">
-          {headline}
-        </h2>
+        {MARKETING_MODE ? (
+          <div className="flex flex-col items-center gap-3 mb-3">
+            <SkeletonBar w="52%" h={36} opacity={0.08} />
+            <SkeletonBar w="42%" h={36} opacity={0.06} />
+          </div>
+        ) : (
+          <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-900 dark:text-white leading-[1.15] mb-3">
+            {headline}
+          </h2>
+        )}
 
         {/* Subtext */}
-        <p className="text-center text-[13px] text-slate-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-7">
-          {subtext}
-        </p>
+        {MARKETING_MODE ? (
+          <div className="flex flex-col items-center gap-2 mb-7">
+            <SkeletonBar w="68%" h={8} opacity={0.1} />
+            <SkeletonBar w="55%" h={8} opacity={0.08} />
+            <SkeletonBar w="38%" h={8} opacity={0.06} />
+          </div>
+        ) : (
+          <p className="text-center text-[13px] text-slate-500 dark:text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-7">
+            {subtext}
+          </p>
+        )}
 
         {/* Metrics */}
         <div className="flex justify-center gap-4">
@@ -138,8 +154,17 @@ export default function AgentActivityBanner() {
               key={i}
               className={`flex flex-col items-center justify-center w-28 h-20 rounded-xl border ${m.boxClass}`}
             >
-              <span className={`text-3xl font-bold leading-none mb-1.5 ${m.numClass}`}>{m.value}</span>
-              <span className="text-[11px] text-slate-500 dark:text-zinc-500 font-medium">{m.label}</span>
+              {MARKETING_MODE ? (
+                <>
+                  <SkeletonBar w={28} h={22} opacity={0.16} />
+                  <div className="mt-2"><SkeletonBar w={52} h={7} opacity={0.1} /></div>
+                </>
+              ) : (
+                <>
+                  <span className={`text-3xl font-bold leading-none mb-1.5 ${m.numClass}`}>{m.value}</span>
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-500 font-medium">{m.label}</span>
+                </>
+              )}
             </div>
           ))}
         </div>
