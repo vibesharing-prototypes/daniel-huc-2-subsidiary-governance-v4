@@ -138,7 +138,7 @@ export default function AgentActivityBanner() {
               key={i}
               className={`flex flex-col items-center justify-center w-28 h-20 rounded-xl border ${m.boxClass}`}
             >
-              <span className={`text-3xl font-bold leading-none mb-1.5 ${m.numClass}`}>{m.value}</span>
+              <span className={`text-3xl font-semibold leading-none mb-1.5 ${m.numClass}`}>{m.value}</span>
               <span className="text-[11px] text-slate-500 dark:text-zinc-500 font-medium">{m.label}</span>
             </div>
           ))}

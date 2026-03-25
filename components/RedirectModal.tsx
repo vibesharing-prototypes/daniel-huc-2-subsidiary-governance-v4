@@ -73,7 +73,7 @@ export default function RedirectModal({
           </div>
 
           {/* Heading */}
-          <h3 className="text-center text-[18px] font-semibold text-slate-900 dark:text-zinc-100 leading-snug mb-1">
+          <h3 className="text-center text-[18px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug mb-1">
             Opening {toolName}
           </h3>
           <p className="text-center text-[12px] text-slate-400 dark:text-zinc-500 mb-7">

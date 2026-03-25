@@ -60,7 +60,7 @@ export default function ConfirmActionModal({
                   {n} {n === 1 ? 'board pack' : 'board packs'} will be updated
                 </span>
               </div>
-              <h2 className="text-[22px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.25]">
+              <h2 className="text-[22px] font-semibold text-slate-800 dark:text-zinc-100 leading-[1.25]">
                 {title}
               </h2>
             </div>
@@ -89,7 +89,7 @@ export default function ConfirmActionModal({
                 <div key={entity.id} className="flex items-center gap-4 px-5 py-4 bg-white dark:bg-zinc-900">
                   <EntityLogo entity={entity} size="lg" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-semibold text-slate-900 dark:text-zinc-100 leading-snug">
+                    <p className="text-[15px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug">
                       {entity.name}
                     </p>
                     <p className="text-[13px] text-slate-500 dark:text-zinc-400 mt-0.5">

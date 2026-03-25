@@ -65,7 +65,7 @@ export default function EntityLogo({
 
   return (
     <div
-      className={`${dim} ${color} rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-white`}
+      className={`${dim} ${color} rounded-lg flex-shrink-0 flex items-center justify-center font-semibold text-white`}
     >
       {initials}
     </div>

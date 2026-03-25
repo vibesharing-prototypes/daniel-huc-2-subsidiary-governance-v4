@@ -15,7 +15,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
         <div className="flex flex-col items-center justify-center text-center py-16 gap-5">
           <EntityLogo entity={entity} size="lg" />
           <div>
-            <p className="text-2xl font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">{entity.name}</p>
+            <p className="text-2xl font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">{entity.name}</p>
             <p className="text-sm text-slate-500 mt-1">Board of Directors</p>
           </div>
           <div className="w-px h-8 bg-slate-200 dark:bg-zinc-700" />
@@ -31,7 +31,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Board Meeting Agenda</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Board Meeting Agenda</h2>
             <p className="text-sm text-slate-400 mt-1">{entity.nextBoard} · 10:00 hrs · Registered Office</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
@@ -61,7 +61,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-5">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Minutes of Board Meeting</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Minutes of Board Meeting</h2>
             <p className="text-sm text-slate-400">Held on 15 December 2025 · 10:00 GMT · Registered Office</p>
           </div>
           <div className="text-sm text-slate-600 space-y-1">
@@ -116,7 +116,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-5">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Chief Executive's Report</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Chief Executive's Report</h2>
             <p className="text-sm text-slate-400">Q4 2025 & Q1 2026 Outlook</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
@@ -148,7 +148,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-5">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Q4 Financial Statements</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Q4 Financial Statements</h2>
             <p className="text-sm text-slate-400">Quarter ended 31 December 2025 · Unaudited management accounts</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
@@ -177,8 +177,8 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
                 </tr>
               ))}
               <tr className="border-t-2 border-slate-300 dark:border-zinc-600">
-                <td className="pt-2 font-bold text-slate-800 dark:text-zinc-100">EBITDA</td>
-                <td className="text-right tabular-nums pt-2 font-bold text-slate-800">£2.8m</td>
+                <td className="pt-2 font-semibold text-slate-800 dark:text-zinc-100">EBITDA</td>
+                <td className="text-right tabular-nums pt-2 font-semibold text-slate-800">£2.8m</td>
                 <td className="text-right tabular-nums pt-2 text-slate-400">£2.2m</td>
                 <td className="text-right tabular-nums pt-2 text-emerald-600 font-semibold">+27%</td>
               </tr>
@@ -194,7 +194,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-5">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Risk & Compliance Report</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Risk & Compliance Report</h2>
             <p className="text-sm text-slate-400">Quarter ended 31 December 2025</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
@@ -208,7 +208,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
               <div key={title} className={`rounded-lg border p-4 ${border}`}>
                 <div className="flex items-center gap-2 mb-2">
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${dot}`} />
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded ${badge}`}>{level}</span>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded ${badge}`}>{level}</span>
                   <span className="text-sm font-semibold text-slate-800 dark:text-zinc-100">{title}</span>
                 </div>
                 <p className="text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">{body}</p>
@@ -222,7 +222,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Resolutions for Approval</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Resolutions for Approval</h2>
             <p className="text-sm text-slate-400">For adoption at the board meeting on {entity.nextBoard}</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
@@ -232,7 +232,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
             { num: 3, title: 'Director Appointment', text: 'IT IS RESOLVED THAT [Full Name] be appointed as an Independent Non-Executive Director of the Company with effect from 15 March 2026, subject to the satisfactory completion of all background checks and due diligence, and that the Company Secretary be authorised to file all necessary notifications with Companies House and other relevant authorities.' },
           ].map(({ num, title, text }) => (
             <div key={num} className="space-y-2">
-              <p className="text-sm font-bold text-slate-800 uppercase tracking-wide">Resolution {num} — {title}</p>
+              <p className="text-sm font-semibold text-slate-800 uppercase tracking-wide">Resolution {num} — {title}</p>
               <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />
               <p className="text-sm text-slate-600 leading-relaxed italic">{text}</p>
               <div className="flex gap-8 pt-2">
@@ -254,7 +254,7 @@ function SectionEditorContent({ type, entity }: { type: SectionType; entity: Ent
       return (
         <div className="space-y-5">
           <div>
-            <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Any Other Business</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-zinc-100 uppercase tracking-wide">Any Other Business</h2>
             <p className="text-sm text-slate-400">Items raised for discussion or noting</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent dark:via-zinc-800" />

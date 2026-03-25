@@ -96,7 +96,7 @@ function LogoStack({ entityIds }: { entityIds: number[] }) {
     <div className="relative group/logos flex-shrink-0">
       <EntityLogo entity={primary} size="md" />
       {extra > 0 && (
-        <div className="absolute -bottom-1 -right-1 min-w-[18px] h-[18px] px-1 bg-slate-700 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none pointer-events-none">
+        <div className="absolute -bottom-1 -right-1 min-w-[18px] h-[18px] px-1 bg-slate-700 text-white text-[9px] font-semibold rounded-full flex items-center justify-center leading-none pointer-events-none">
           +{extra}
         </div>
       )}

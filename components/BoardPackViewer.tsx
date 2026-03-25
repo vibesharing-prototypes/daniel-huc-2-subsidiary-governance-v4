@@ -202,7 +202,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
         <div className="flex flex-col items-center justify-center text-center py-8 gap-3 min-h-[200px]">
           <EntityLogo entity={entity} size="lg" />
           <div>
-            <p className="text-sm font-bold text-slate-800">{entity.name}</p>
+            <p className="text-sm font-semibold text-slate-800">{entity.name}</p>
             <p className="text-xs text-slate-400 mt-0.5">Board of Directors</p>
           </div>
           <div className="w-px h-4 bg-slate-200" />
@@ -218,7 +218,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
       return (
         <div className="space-y-2.5">
           <div>
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Board Meeting Agenda</p>
+            <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Board Meeting Agenda</p>
             <p className="text-[10px] text-slate-400 mt-0.5">{entity.nextBoard} · 10:00 hrs · Registered Office</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
@@ -248,7 +248,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
       return (
         <div className="space-y-2">
           <div>
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Minutes of Board Meeting</p>
+            <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Minutes of Board Meeting</p>
             <p className="text-[10px] text-slate-400">Held on 15 December 2025 · 10:00 GMT</p>
           </div>
           <div className="text-[10px] text-slate-600">
@@ -298,7 +298,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
       return (
         <div className="space-y-2 text-[10px]">
           <div>
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Chief Executive's Report</p>
+            <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Chief Executive's Report</p>
             <p className="text-slate-400">Q4 2025 & Q1 2026 Outlook</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
@@ -325,7 +325,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
       return (
         <div className="space-y-2 text-[10px]">
           <div>
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Q4 Financial Statements</p>
+            <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Q4 Financial Statements</p>
             <p className="text-slate-400">Quarter ended 31 December 2025</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
@@ -367,7 +367,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
       return (
         <div className="space-y-2 text-[10px]">
           <div>
-            <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Risk & Compliance</p>
+            <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Risk & Compliance</p>
             <p className="text-slate-400">Quarter ended 31 December 2025</p>
           </div>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
@@ -379,7 +379,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
               { level: 'LOW', color: 'text-emerald-600 bg-emerald-50 border-emerald-200', title: 'Reputational Risk', body: 'Social media monitoring in place. No incidents to report this quarter.' },
             ].map(({ level, color, title, body }) => (
               <div key={title} className="flex gap-2">
-                <span className={`inline-block border px-1 py-0.5 rounded text-[8px] font-bold flex-shrink-0 leading-none mt-0.5 ${color}`}>{level}</span>
+                <span className={`inline-block border px-1 py-0.5 rounded text-[8px] font-semibold flex-shrink-0 leading-none mt-0.5 ${color}`}>{level}</span>
                 <div>
                   <p className="font-semibold text-slate-700">{title}</p>
                   <p className="text-slate-500 mt-0.5 leading-relaxed">{body}</p>
@@ -393,7 +393,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
     case 'resolution':
       return (
         <div className="space-y-3 text-[10px]">
-          <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Resolutions for Approval</p>
+          <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Resolutions for Approval</p>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
           {[
             { num: 1, title: 'Approval of Q4 2025 Accounts', text: 'IT IS RESOLVED THAT the Q4 2025 management accounts, as presented to the Board, be and are hereby approved and signed by the Chair on behalf of the Board.' },
@@ -401,7 +401,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
             { num: 3, title: 'Director Appointment', text: 'IT IS RESOLVED THAT [Name] be appointed as an Independent Non-Executive Director of the Company with effect from 15 March 2026, subject to satisfactory completion of due diligence.' },
           ].map(({ num, title, text }) => (
             <div key={num} className="space-y-0.5">
-              <p className="font-bold text-slate-700 uppercase tracking-wide text-[9px]">Resolution {num} — {title}</p>
+              <p className="font-semibold text-slate-700 uppercase tracking-wide text-[9px]">Resolution {num} — {title}</p>
               <p className="text-slate-600 leading-relaxed">{text}</p>
             </div>
           ))}
@@ -411,7 +411,7 @@ function SectionModalContent({ section, entity }: { section: Section; entity: En
     case 'aob':
       return (
         <div className="space-y-2 text-[10px]">
-          <p className="text-xs font-bold text-slate-800 uppercase tracking-wide">Any Other Business</p>
+          <p className="text-xs font-semibold text-slate-800 uppercase tracking-wide">Any Other Business</p>
           <div className="h-px bg-gradient-to-r from-transparent via-slate-100 to-transparent" />
           <div className="space-y-2.5">
             {[
@@ -645,7 +645,7 @@ function ConnectedAppPopup({
 
         <div className="px-5 pt-5 pb-4">
           {/* App name */}
-          <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100 pr-6 mb-3">{appName}</p>
+          <p className="text-sm font-semibold text-slate-800 dark:text-zinc-100 pr-6 mb-3">{appName}</p>
 
           {/* Auth status */}
           <div className="flex items-center gap-2 mb-3 p-2.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-lg">
@@ -715,7 +715,7 @@ export default function BoardPackViewer({ entity }: { entity: Entity }) {
           <EntityLogo entity={entity} size="lg" />
           <div>
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">Board Pack · Q1 2026</p>
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-zinc-100 mt-0.5">{entity.name}</h2>
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-zinc-100 mt-0.5">{entity.name}</h2>
           </div>
         </div>
         <button
