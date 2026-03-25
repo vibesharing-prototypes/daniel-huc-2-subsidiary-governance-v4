@@ -8,6 +8,8 @@ import RedirectModal, { type RedirectDestination } from '@/components/RedirectMo
 import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { useProtoState } from '@/components/ProtoStateContext'
+import { useMarketingMode } from '@/components/MarketingModeContext'
+import { SkeletonBar } from '@/components/SkeletonBar'
 
 // ─── Agent workflow steps ─────────────────────────────────────────────────────
 
@@ -228,6 +230,7 @@ export default function PlanningSuggestions() {
   const [showAll, setShowAll] = useState(false)
   const agentActivity = useAgentActivity()
   const state = useProtoState()
+  const marketingMode = useMarketingMode()
 
   function handleApply(suggestion: PlanningSuggestion) {
     const id = suggestion.id
@@ -340,14 +343,29 @@ export default function PlanningSuggestions() {
                 </div>
 
                 {/* Title */}
-                <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
-                  {suggestion.title}
-                </p>
+                {marketingMode ? (
+                  <div className="space-y-2 mb-2">
+                    <SkeletonBar w="90%" h={10} />
+                    <SkeletonBar w="70%" h={10} />
+                  </div>
+                ) : (
+                  <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                    {suggestion.title}
+                  </p>
+                )}
 
                 {/* Reason — always visible */}
-                <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
-                  {suggestion.reason}
-                </p>
+                {marketingMode ? (
+                  <div className="space-y-1.5">
+                    <SkeletonBar w="100%" h={7} opacity={0.10} />
+                    <SkeletonBar w="92%" h={7} opacity={0.10} />
+                    <SkeletonBar w="85%" h={7} opacity={0.10} />
+                  </div>
+                ) : (
+                  <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
+                    {suggestion.reason}
+                  </p>
+                )}
 
                 {/* Hover-reveal block */}
                 {hasHoverReveal(suggestion) && !isApplied && (
@@ -373,7 +391,12 @@ export default function PlanningSuggestions() {
                 )}
 
                 {/* Progress widget (inline, when applying) or CTA row */}
-                {isApplying && job ? (
+                {marketingMode ? (
+                  <div className="flex gap-2 mt-4 justify-end">
+                    <SkeletonBar w={110} h={38} />
+                    <SkeletonBar w={70} h={38} />
+                  </div>
+                ) : isApplying && job ? (
                   <div className="mt-4">
                     <AgentProgressWidget job={job} />
                   </div>

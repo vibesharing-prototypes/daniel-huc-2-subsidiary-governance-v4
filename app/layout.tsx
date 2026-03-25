@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import TopNav from "@/components/TopNav";
 import ThemeSync from "@/components/ThemeSync";
+import { MarketingModeProvider } from "@/components/MarketingModeContext";
 import Script from "next/script";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -34,10 +35,12 @@ export default function RootLayout({
           data-description="Multi-entity governance dashboard prototype"
           strategy="afterInteractive"
         />
-        <TopNav />
-        <div className="flex-1 min-h-0 overflow-hidden">
-          {children}
-        </div>
+        <MarketingModeProvider>
+          <TopNav />
+          <div className="flex-1 min-h-0 overflow-hidden">
+            {children}
+          </div>
+        </MarketingModeProvider>
       </body>
     </html>
   );

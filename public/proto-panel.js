@@ -40,14 +40,16 @@
   // ── Defaults ─────────────────────────────────────────────────────────────────
 
   const DEFAULTS = {
-    description:     'A Claude-coded prototype.',
-    themeToggle:     true,
-    stateToggle:     true,
-    stateLabels:     ['CALM', 'BUSY', 'CRITICAL'],
-    applyThemeClass: true,
-    applyStateClass: true,
-    onThemeChange:   null,
-    onStateChange:   null,
+    description:      'A Claude-coded prototype.',
+    themeToggle:      true,
+    stateToggle:      true,
+    marketingToggle:  true,
+    stateLabels:      ['CALM', 'BUSY', 'CRITICAL'],
+    applyThemeClass:  true,
+    applyStateClass:  true,
+    onThemeChange:    null,
+    onStateChange:    null,
+    onMarketingChange: null,
   };
 
   // ── CSS ──────────────────────────────────────────────────────────────────────
@@ -216,6 +218,13 @@
       border: 1px solid rgba(248, 113, 113, 0.25);
     }
 
+    /* Marketing button — active state (amber = "marketing demo") */
+    .pp-marketing-pill .pp-btn[data-pp-marketing="marketing"].pp-active {
+      background: #3a2a10;
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
     /* ── Description ── */
     .pp-description {
       font-size: 12px;
@@ -252,6 +261,16 @@
       </div>
       <div class="pp-divider"></div>` : '';
 
+    const marketingBlock = cfg.marketingToggle ? `
+      <div class="pp-group">
+        <span class="pp-group-label">MODE</span>
+        <div class="pp-pill pp-marketing-pill">
+          <button class="pp-btn pp-active" data-pp-marketing="full">FULL</button>
+          <button class="pp-btn"           data-pp-marketing="marketing">MARKETING</button>
+        </div>
+      </div>
+      <div class="pp-divider"></div>` : '';
+
     return `
       <div class="pp-bar" id="pp-bar" role="region" aria-label="Prototype controls">
         <div class="pp-collapsed" id="pp-collapsed" role="button" aria-expanded="false" tabindex="0">
@@ -266,6 +285,7 @@
         <div class="pp-expanded" aria-hidden="true">
           ${themeBlock}
           ${stateBlock}
+          ${marketingBlock}
           <p class="pp-description">${cfg.description}</p>
         </div>
       </div>`;
@@ -355,6 +375,25 @@
 
           if (typeof cfg.onStateChange === 'function') cfg.onStateChange(state);
           document.dispatchEvent(new CustomEvent('proto:state', { detail: { state }, bubbles: true }));
+        });
+      });
+    }
+
+    // ── Marketing Mode toggle ──────────────────────────────────────────────────
+    if (cfg.marketingToggle) {
+      let currentMode = 'full';
+      bar.querySelectorAll('[data-pp-marketing]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          const mode = btn.dataset.ppMarketing;
+          if (mode === currentMode) return;
+          currentMode = mode;
+
+          bar.querySelectorAll('[data-pp-marketing]').forEach(b => b.classList.remove('pp-active'));
+          btn.classList.add('pp-active');
+
+          if (typeof cfg.onMarketingChange === 'function') cfg.onMarketingChange(mode);
+          document.dispatchEvent(new CustomEvent('proto:marketing', { detail: { mode }, bubbles: true }));
         });
       });
     }
