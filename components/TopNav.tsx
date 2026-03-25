@@ -8,7 +8,7 @@ export default function TopNav() {
           <path fill="#AF292E" d="M142.75,12.83l-0.99,1.47L0.74,119.34L0,118.65c0,0,0-0.03,0-0.06V0.45h85.63c5.91,0,11.64,0.34,17.19,1.01h0.21c14.02,1.66,26.93,5.31,38.48,10.78C141.97,12.46,142.75,12.83,142.75,12.83z"/>
           <path fill="#D3222A" d="M142.75,12.83L0,118.65v99.27v3.62h85.96c7.61,0,14.94-0.58,21.99-1.66C107.95,219.89,142.75,12.83,142.75,12.83z"/>
         </svg>
-        <span className="text-slate-900 dark:text-zinc-100 font-semibold text-xs tracking-tight">Subsidiary Board Management</span>
+        <span className="text-slate-800 dark:text-zinc-100 font-semibold text-xs tracking-tight">Subsidiary Board Management</span>
       </div>
 
       {/* Right: actions + user */}
@@ -50,7 +50,7 @@ export default function TopNav() {
           <div className="w-7 h-7 rounded-full bg-slate-400 dark:bg-zinc-600 flex items-center justify-center flex-shrink-0 ring-1 ring-slate-200 dark:ring-zinc-700">
             <span className="text-xs font-semibold text-white leading-none">SM</span>
           </div>
-          <span className="text-sm text-slate-900 dark:text-zinc-100 font-medium">Sarah Mitchell</span>
+          <span className="text-sm text-slate-800 dark:text-zinc-100 font-medium">Sarah Mitchell</span>
         </div>
       </div>
     </nav>

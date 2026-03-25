@@ -261,7 +261,7 @@ export default function BookBuilding() {
                     {itemEntities.map(e => <EntityLogo key={e.id} entity={e} size="sm" />)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
+                    <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
                     <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
                   </div>
                   {isApplied ? (
@@ -283,7 +283,7 @@ export default function BookBuilding() {
                     <SkeletonBar w="65%" h={10} />
                   </div>
                 ) : (
-                  <p className={`text-[16px] font-semibold text-slate-900 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
+                  <p className={`text-[16px] font-semibold text-slate-800 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
                     {item.title}
                   </p>
                 )}

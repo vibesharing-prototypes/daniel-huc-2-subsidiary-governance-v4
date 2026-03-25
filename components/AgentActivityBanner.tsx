@@ -122,7 +122,7 @@ export default function AgentActivityBanner() {
         </div>
 
         {/* Headline */}
-        <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-900 dark:text-white leading-[1.15] mb-3">
+        <h2 className="text-center text-[2.5rem] font-light tracking-[-0.02em] text-slate-800 dark:text-zinc-100 leading-[1.15] mb-3">
           {headline}
         </h2>
 
