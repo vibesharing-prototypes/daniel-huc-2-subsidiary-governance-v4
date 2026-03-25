@@ -142,7 +142,7 @@ export default function AgentActivityBanner() {
         </div>
 
         {/* Divider */}
-        <div className="mt-8 pt-6 border-t border-black/[0.05] dark:border-zinc-800" />
+        <div className="mt-8 pt-4 border-t border-black/[0.05] dark:border-zinc-800" />
 
       </div>
     </div>
