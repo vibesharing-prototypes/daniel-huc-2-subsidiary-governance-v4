@@ -33,7 +33,7 @@ function HomeContentInner() {
         <div className={`hero-glow ${glowClass}`} aria-hidden />
 
         <div className="mx-auto w-full max-w-6xl px-6 pb-24 relative">
-          <div className="mb-6">
+          <div className="mb-2">
             <AgentActivityBanner />
           </div>
             <div className="mb-8">
