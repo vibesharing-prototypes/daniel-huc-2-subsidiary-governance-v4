@@ -533,7 +533,7 @@ function BrowseModal({
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/50 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30 flex-shrink-0">
           <button
             onClick={() => setCurrent(p => Math.max(0, p - 1))}
             disabled={current === 0}

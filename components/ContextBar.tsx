@@ -138,7 +138,7 @@ export default function ContextBar({ currentEntityId }: ContextBarProps) {
             <div className="overflow-y-auto max-h-[calc(100vh-76px)]">
 
             {/* Table header */}
-            <div className="grid grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4 items-center px-5 py-3 bg-slate-50 dark:bg-zinc-800 border-b border-slate-200 dark:border-zinc-700">
+            <div className="grid grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4 items-center px-5 py-3 bg-slate-50/50 dark:bg-zinc-800/30 border-b border-slate-200 dark:border-zinc-700">
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Entity</span>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Country</span>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Next Board Meeting</span>

@@ -131,7 +131,7 @@ export default function ConfirmActionModal({
             )}
 
             {proposedEdit && (
-              <div className="mt-4 bg-slate-50 dark:bg-zinc-800/60 rounded-2xl p-4 border border-slate-200 dark:border-zinc-700">
+              <div className="mt-4 bg-slate-50/50 dark:bg-zinc-800/30 rounded-2xl p-4 border border-slate-200 dark:border-zinc-700">
                 <p className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-widest mb-2">
                   Proposed edit
                 </p>
