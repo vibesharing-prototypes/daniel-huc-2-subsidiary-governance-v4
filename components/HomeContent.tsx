@@ -23,18 +23,20 @@ export default function HomeContent() {
     <ProtoStateProvider>
       <AgentActivityProvider getSectionIndex={getSectionIndexCb}>
         <div className="flex-1 overflow-y-auto px-6 py-4 home-gradient">
-          <div className="mb-6">
-            <AgentActivityBanner />
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="mb-6">
+              <AgentActivityBanner />
+            </div>
+            <div className="mb-4">
+              <QuickActionsBar />
+            </div>
+            <div className="flex flex-col gap-6">
+              <BookBuilding />
+              <PlanningSuggestions />
+            </div>
+            <AgentUsecaseHeroes />
+            <Footer />
           </div>
-          <div className="mb-4">
-            <QuickActionsBar />
-          </div>
-          <div className="flex flex-col gap-6">
-            <BookBuilding />
-            <PlanningSuggestions />
-          </div>
-          <AgentUsecaseHeroes />
-          <Footer />
         </div>
       </AgentActivityProvider>
     </ProtoStateProvider>

@@ -378,10 +378,10 @@ export default function PlanningSuggestions() {
                     <AgentProgressWidget job={job} />
                   </div>
                 ) : isApplied ? (
-                  <div className="mt-4">
+                  <div className="mt-4 flex justify-end">
                     <button
                       onClick={e => { e.stopPropagation(); setRedirectDest(suggestion.sourceType === 'reorder' ? 'forward-planner' : 'smart-book-builder') }}
-                      className="w-full flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
+                      className="flex items-center justify-center gap-2 text-[14px] font-normal bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl py-[11px] px-4 transition-colors"
                     >
                       {suggestion.sourceType === 'reorder' ? 'Check in Forward Planner' : 'Check in Smart Book Builder'}
                       <svg className="w-3.5 h-3.5 opacity-80" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -390,10 +390,10 @@ export default function PlanningSuggestions() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex gap-2 mt-4">
+                  <div className="flex gap-2 mt-4 justify-end">
                     <button
                       onClick={e => handleRowCTA(e, suggestion)}
-                      className="flex-1 text-[14px] font-normal bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl py-[11px] px-4 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 dark:active:bg-zinc-200 transition-colors"
+                      className="text-[14px] font-normal bg-slate-800 dark:bg-zinc-700 text-white dark:text-zinc-100 rounded-xl py-[11px] px-4 hover:bg-slate-900 dark:hover:bg-zinc-600 active:bg-slate-950 dark:active:bg-zinc-500 transition-colors"
                     >
                       {suggestion.actionLabel}
                     </button>

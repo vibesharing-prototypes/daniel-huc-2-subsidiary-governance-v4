@@ -52,8 +52,10 @@ export default function EntityPage({ params }: { params: { id: string } }) {
 
         {/* Main content */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          <BoardPackViewer entity={entity} />
-          <Footer />
+          <div className="mx-auto w-full max-w-6xl">
+            <BoardPackViewer entity={entity} />
+            <Footer />
+          </div>
         </div>
       </main>
 
