@@ -109,7 +109,7 @@ export default function AgentActivityBanner() {
 
   return (
     <div>
-      <div className="px-8 pt-8 pb-7">
+      <div className="px-8 pt-8 pb-0">
         {/* Status pill */}
         <div className="flex justify-center mb-5">
           <span className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-[11px] font-semibold tracking-[0.04em] ${cfg.pillText} ${cfg.pillBorder} ${cfg.pillBg}`}>
