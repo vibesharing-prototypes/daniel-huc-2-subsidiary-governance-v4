@@ -59,17 +59,10 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-.home-gradient {
-  background: radial-gradient(ellipse 70% 40% at 50% 0%, #bfdbfe55 0%, transparent 100%);
-}
-.dark .home-gradient {
-  background: radial-gradient(ellipse 70% 40% at 50% 0%, #1e3a6040 0%, transparent 100%);
-}
-
 /* Hero banner state glows */
 .hero-glow {
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: -1px; left: 0; right: 0;
   height: 180px;
   pointer-events: none;
   z-index: 0;
