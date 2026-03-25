@@ -218,7 +218,13 @@
       border: 1px solid rgba(248, 113, 113, 0.25);
     }
 
-    /* Marketing button — active state (amber = "marketing demo") */
+    /* Marketing button — full mode active (default neutral state) */
+    .pp-marketing-pill .pp-btn[data-pp-marketing="full"].pp-active {
+      background: #2e2e32;
+      color: #ccccce;
+    }
+
+    /* Marketing button — marketing mode active (amber = "marketing demo") */
     .pp-marketing-pill .pp-btn[data-pp-marketing="marketing"].pp-active {
       background: #3a2a10;
       color: #f59e0b;
