@@ -262,7 +262,11 @@ export default function BookBuilding() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 truncate">{itemEntities.map(e => e.shortName).join(', ')}</p>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
+                    {marketingMode ? (
+                      <SkeletonBar w="60%" h={6} opacity={0.08} />
+                    ) : (
+                      <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{itemEntities.length} {itemEntities.length === 1 ? 'entity' : 'entities'}</p>
+                    )}
                   </div>
                   {isApplied ? (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border whitespace-nowrap flex-shrink-0 bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-400">
@@ -278,9 +282,8 @@ export default function BookBuilding() {
 
                 {/* Title */}
                 {marketingMode ? (
-                  <div className="space-y-2 mb-2">
-                    <SkeletonBar w="85%" h={10} />
-                    <SkeletonBar w="65%" h={10} />
+                  <div className="mb-2">
+                    <SkeletonBar w="75%" h={10} />
                   </div>
                 ) : (
                   <p className={`text-[16px] font-semibold text-slate-800 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
@@ -290,11 +293,7 @@ export default function BookBuilding() {
 
                 {/* Detail */}
                 {marketingMode ? (
-                  <div className="space-y-1.5">
-                    <SkeletonBar w="100%" h={7} opacity={0.10} />
-                    <SkeletonBar w="95%" h={7} opacity={0.10} />
-                    <SkeletonBar w="88%" h={7} opacity={0.10} />
-                  </div>
+                  <SkeletonBar w="90%" h={7} opacity={0.10} />
                 ) : (
                   <p className="text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed">
                     {item.detail}

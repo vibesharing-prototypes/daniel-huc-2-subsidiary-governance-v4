@@ -326,7 +326,11 @@ export default function PlanningSuggestions() {
                           {primaryEntity.name}
                           {isBatch && <span className="text-slate-400 dark:text-zinc-500 font-normal"> + {suggestion.entities.length - 1} more</span>}
                         </p>
-                        <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{primaryEntity.country} · Board: {primaryEntity.nextBoard}</p>
+                        {marketingMode ? (
+                          <SkeletonBar w="70%" h={6} opacity={0.08} />
+                        ) : (
+                          <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{primaryEntity.country} · Board: {primaryEntity.nextBoard}</p>
+                        )}
                       </>
                     )}
                   </div>
@@ -344,9 +348,8 @@ export default function PlanningSuggestions() {
 
                 {/* Title */}
                 {marketingMode ? (
-                  <div className="space-y-2 mb-2">
-                    <SkeletonBar w="90%" h={10} />
-                    <SkeletonBar w="70%" h={10} />
+                  <div className="mb-2">
+                    <SkeletonBar w="80%" h={10} />
                   </div>
                 ) : (
                   <p className={`text-[16px] font-semibold text-slate-800 dark:text-zinc-100 leading-[1.35] mb-2 ${isApplying ? 'opacity-40' : ''}`}>
@@ -356,11 +359,7 @@ export default function PlanningSuggestions() {
 
                 {/* Reason — always visible */}
                 {marketingMode ? (
-                  <div className="space-y-1.5">
-                    <SkeletonBar w="100%" h={7} opacity={0.10} />
-                    <SkeletonBar w="92%" h={7} opacity={0.10} />
-                    <SkeletonBar w="85%" h={7} opacity={0.10} />
-                  </div>
+                  <SkeletonBar w="85%" h={7} opacity={0.10} />
                 ) : (
                   <p className={`text-[13px] text-slate-500 dark:text-zinc-400 leading-relaxed ${isApplying ? 'opacity-40' : ''}`}>
                     {suggestion.reason}

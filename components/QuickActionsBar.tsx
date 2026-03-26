@@ -5,6 +5,8 @@ import ConfirmActionModal from '@/components/ConfirmActionModal'
 import AgentProgressWidget from '@/components/AgentProgressWidget'
 import { useAgentActivity } from '@/components/AgentActivityContext'
 import { ENTITIES } from '@/components/data'
+import { useMarketingMode } from '@/components/MarketingModeContext'
+import { SkeletonBar } from '@/components/SkeletonBar'
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -145,6 +147,7 @@ const ITEM_GAP = 8
 const MORE_BTN_W = 60
 
 export default function QuickActionsBar() {
+  const marketingMode = useMarketingMode()
   const [confirmAction, setConfirmAction] = useState<QuickAction | null>(null)
   const [visibleCount, setVisibleCount] = useState(QUICK_ACTIONS.length)
   const [activeJobs, setActiveJobs] = useState<Record<string, string>>({}) // actionId → jobId
@@ -233,9 +236,13 @@ export default function QuickActionsBar() {
               <p className="text-[13px] font-semibold text-slate-800 group-hover:text-slate-900 dark:text-zinc-100 leading-snug truncate transition-colors">
                 {action.label}
               </p>
-              <p className="text-[11px] text-slate-400 group-hover:text-slate-500 dark:text-zinc-500 leading-snug truncate transition-colors">
-                {action.sublabel}
-              </p>
+              {marketingMode ? (
+                <SkeletonBar w="80%" h={6} opacity={0.08} />
+              ) : (
+                <p className="text-[11px] text-slate-400 group-hover:text-slate-500 dark:text-zinc-500 leading-snug truncate transition-colors">
+                  {action.sublabel}
+                </p>
+              )}
             </div>
           </button>
         ))}
@@ -271,7 +278,11 @@ export default function QuickActionsBar() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug">{action.label}</p>
-                      <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug">{action.sublabel}</p>
+                      {marketingMode ? (
+                        <SkeletonBar w="140px" h={6} opacity={0.08} />
+                      ) : (
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug">{action.sublabel}</p>
+                      )}
                     </div>
                   </button>
                 ))}

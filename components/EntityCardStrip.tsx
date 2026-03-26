@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react'
 import { ENTITIES, type Entity } from '@/components/data'
+import { useMarketingMode } from '@/components/MarketingModeContext'
+import { SkeletonBar } from '@/components/SkeletonBar'
 
 function getDaysUntil(date: Date): number {
   return Math.ceil((date.getTime() - Date.now()) / 86400000)
@@ -14,18 +16,29 @@ function getDaysClass(days: number): string {
 }
 
 function EntityCard({ entity }: { entity: Entity }) {
+  const marketingMode = useMarketingMode()
   const daysUntil = useMemo(() => getDaysUntil(entity.nextBoardDate), [entity.nextBoardDate])
   const daysClass = getDaysClass(daysUntil)
 
   return (
     <div className="flex-shrink-0 w-52 rounded-lg border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-slate-400 dark:hover:border-zinc-600 hover:shadow-sm transition-all cursor-pointer select-none">
-      <p className="text-xs text-slate-400 dark:text-zinc-500 font-medium mb-0.5 uppercase tracking-wide">{entity.countryCode}</p>
+      {marketingMode ? (
+        <SkeletonBar w="30%" h={6} opacity={0.08} />
+      ) : (
+        <p className="text-xs text-slate-400 dark:text-zinc-500 font-medium mb-0.5 uppercase tracking-wide">{entity.countryCode}</p>
+      )}
       <p className="text-sm font-semibold text-slate-800 dark:text-zinc-200 leading-snug mb-3 truncate">{entity.shortName}</p>
 
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-xs text-slate-500 dark:text-zinc-400">{entity.nextBoard}</span>
-        <span className={`text-xs tabular-nums ${daysClass}`}>{daysUntil}d</span>
-      </div>
+      {marketingMode ? (
+        <div className="mb-1.5">
+          <SkeletonBar w="100%" h={6} opacity={0.08} />
+        </div>
+      ) : (
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-xs text-slate-500 dark:text-zinc-400">{entity.nextBoard}</span>
+          <span className={`text-xs tabular-nums ${daysClass}`}>{daysUntil}d</span>
+        </div>
+      )}
 
       <div className="h-1 bg-slate-100 dark:bg-zinc-700 rounded-full mb-1.5 overflow-hidden">
         <div
@@ -34,7 +47,11 @@ function EntityCard({ entity }: { entity: Entity }) {
         />
       </div>
 
-      <p className="text-xs text-slate-400 dark:text-zinc-500">{entity.completion}% complete</p>
+      {marketingMode ? (
+        <SkeletonBar w="50%" h={6} opacity={0.08} />
+      ) : (
+        <p className="text-xs text-slate-400 dark:text-zinc-500">{entity.completion}% complete</p>
+      )}
     </div>
   )
 }
