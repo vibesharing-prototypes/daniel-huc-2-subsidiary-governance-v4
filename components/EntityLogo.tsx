@@ -42,6 +42,7 @@ export default function EntityLogo({
   size?: 'sm' | 'md' | 'lg'
 }) {
   const [imgFailed, setImgFailed] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   const color = LOGO_COLORS[(entity.id - 1) % LOGO_COLORS.length]
   const initials = getInitials(entity.shortName)
@@ -52,22 +53,25 @@ export default function EntityLogo({
       ? 'w-12 h-12 text-sm'
       : 'w-9 h-9 text-xs'
 
-  if (!imgFailed) {
-    return (
-      <img
-        src={getEntityLogoPath(entity)}
-        alt={entity.shortName}
-        className={`${dim} rounded-lg flex-shrink-0 object-contain bg-white dark:bg-zinc-800`}
-        onError={() => setImgFailed(true)}
-      />
-    )
-  }
+  // Show fallback if image failed or hasn't loaded yet
+  const showFallback = imgFailed || !imgLoaded
 
   return (
-    <div
-      className={`${dim} ${color} rounded-lg flex-shrink-0 flex items-center justify-center font-semibold text-white`}
-    >
-      {initials}
+    <div className="relative flex-shrink-0" style={{ width: size === 'sm' ? '1.75rem' : size === 'lg' ? '3rem' : '2.25rem', height: size === 'sm' ? '1.75rem' : size === 'lg' ? '3rem' : '2.25rem' }}>
+      {!imgFailed && (
+        <img
+          src={getEntityLogoPath(entity)}
+          alt={entity.shortName}
+          className={`absolute inset-0 w-full h-full rounded-lg object-contain bg-white dark:bg-zinc-800 transition-opacity duration-200 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onError={() => setImgFailed(true)}
+          onLoad={() => setImgLoaded(true)}
+        />
+      )}
+      <div
+        className={`absolute inset-0 w-full h-full ${color} rounded-lg flex items-center justify-center font-semibold text-white transition-opacity duration-200 ${showFallback ? 'opacity-100' : 'opacity-0'}`}
+      >
+        {initials}
+      </div>
     </div>
   )
 }

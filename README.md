@@ -1,6 +1,8 @@
-# Vibe Starter
+# Subsidiary Board Management (HUC 2)
 
-A minimal prototype starter kit for VibeSharing.
+Multi-entity governance dashboard prototype for managing board packs, planning suggestions, and book building across 8 subsidiary entities.
+
+**Live Prototype:** https://github.com/vibesharing-prototypes/daniel-huc-2-subsidiary-governance-v4
 
 ## Quick Start
 
@@ -11,75 +13,86 @@ npm install
 # Start development server
 npm run dev
 
-# Deploy to VibeSharing
-npm run deploy
+# Deploy (via git push)
+git push origin main
 ```
 
-## Setup for VibeSharing
+## Features
 
-### One-Time Setup (do once)
+### Core Functionality
+- **Multi-Entity Dashboard**: Manage 8 subsidiary entities with real-time progress tracking
+- **Book Building**: Track gaps, overdue items, and missing sections across board packs
+- **Planning Suggestions**: AI-driven recommendations from regulatory changes and external events
+- **Board Pack Viewer**: Browse and navigate board meeting materials
+- **Document Editor**: Edit board pack sections with AI assistance
 
-1. Sign in to [vibesharing.app](https://vibesharing.app)
-2. Go to **Account** (person icon, top-right) → Copy your deploy token
-3. Save it globally so all projects can use it:
+### Marketing Mode
+Toggle between **Full Mode** (complete functionality) and **Marketing Mode** (sanitized for promo videos):
+- Single-line skeleton masks for subtitles
+- Demoted CTAs to secondary style
+- Shortened hero status lines
+- Cleaner entity dropdown layout
+- Access via proto-panel toggle (top of page)
 
-```bash
-mkdir -p ~/.vibesharing
-echo '{"deployToken": "vs_your_token_here"}' > ~/.vibesharing/config.json
-```
-
-### Per-Project Setup
-
-1. Create a project and prototype on vibesharing.app
-2. Copy the prototype ID from the prototype page
-3. Add it to `vibesharing.json`:
-
-```json
-{
-  "prototypeId": "your-prototype-id-here"
-}
-```
-
-4. Run `npm run deploy` to ship it!
+### State System
+Three dynamic states showing different scenarios:
+- **CALM**: Normal operations, routine tasks
+- **BUSY**: Multiple items requiring review
+- **CRITICAL**: Emerging risks requiring disclosure
 
 ## Project Structure
 
 ```
 ├── app/
-│   ├── layout.tsx    # Root layout
-│   ├── page.tsx      # Home page (edit this!)
-│   └── globals.css   # Global styles
-├── components/       # Reusable components
-├── CLAUDE.md         # AI context (auto-imported on deploy)
-├── vibesharing.json  # VibeSharing config
-├── vercel.json       # Vercel config (enables preview embedding)
-└── package.json
+│   ├── layout.tsx              # Root layout with providers
+│   ├── page.tsx                # Home page
+│   ├── entity/[id]/page.tsx    # Entity detail page
+│   └── globals.css             # Tailwind + custom styles
+├── components/
+│   ├── AgentActivityBanner.tsx # Hero section with state
+│   ├── BookBuilding.tsx        # Book building cards
+│   ├── PlanningSuggestions.tsx # Planning suggestion cards
+│   ├── ContextBar.tsx          # Entities dropdown
+│   ├── MarketingModeContext.tsx# Marketing mode provider
+│   ├── SkeletonBar.tsx         # Skeleton placeholder component
+│   └── data.ts                 # Mock entity data
+├── public/
+│   ├── logos/                  # Entity logos
+│   └── proto-panel.js          # Prototype controls
+├── CLAUDE.md                   # Project instructions
+└── docs/                       # Session notes & specs
 ```
 
-## vercel.json
+## Technical Stack
 
-The included `vercel.json` configures headers to allow your prototype to be embedded in VibeSharing's preview iframe. Don't remove it unless you have a specific reason.
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS
+- **Deployment**: Vercel (via GitHub)
+- **Typography**: Plus Jakarta Sans
 
-## CLAUDE.md
+## Deployment
 
-Keep your `CLAUDE.md` file updated with:
-- What you built
-- Decisions made
-- Known issues
-- Next steps
-
-When you deploy, VibeSharing automatically imports this as context history.
-
-## Deploying
+Push to main branch - Vercel auto-deploys within 30-60 seconds:
 
 ```bash
-npm run deploy
+git add .
+git commit -m "Your changes"
+git push origin main
 ```
 
-This will:
-1. Zip your project (excluding node_modules, .git, etc.)
-2. Upload to VibeSharing
-3. Deploy to Vercel
-4. Import CLAUDE.md as context
+**Do NOT use** `vercel deploy` CLI or VibeSharing MCP tools.
 
-Your prototype will be live in seconds!
+## Z-Index Hierarchy
+
+- **z-[200]**: All modals (top layer)
+- **z-[100]**: FloatingChatPanel
+- **z-[60]**: ContextBar (Entities dropdown)
+- **z-[30]**: Dropdown menus
+- **z-[20]**: Tooltips
+
+## Key Documentation
+
+- `CLAUDE.md` - Project instructions and conventions
+- `docs/MARKETING-MODE-INTEGRATION.md` - Marketing mode implementation details
+- `docs/SESSION-2026-03-26-marketing-mode.md` - Latest session summary
+- `visual_direction.md` - Design principles and visual spec
