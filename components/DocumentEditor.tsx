@@ -375,8 +375,9 @@ export default function DocumentEditor({
     <div className="h-screen flex flex-col bg-[#f0f0f1] dark:bg-zinc-950 overflow-hidden">
 
       {/* Top navigation bar */}
-      <header className="flex-shrink-0 flex items-center justify-between px-6 py-3 border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-        <div className="flex items-center gap-2 min-w-0">
+      <header className="flex-shrink-0 flex border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        {/* Left: breadcrumb area (matches sidebar width) */}
+        <div className="w-80 flex-shrink-0 px-4 py-3 flex items-center gap-2 min-w-0 border-r border-slate-200 dark:border-zinc-800">
           <button
             onClick={handleBack}
             className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-100 transition-colors flex-shrink-0"
@@ -397,8 +398,8 @@ export default function DocumentEditor({
           )}
         </div>
 
-        {/* Section prev/next */}
-        <div className="flex items-center gap-3 flex-shrink-0">
+        {/* Right: section prev/next (matches main content area) */}
+        <div className="flex-1 px-8 py-3 flex items-center justify-end gap-3 flex-shrink-0">
           <button
             onClick={() => {
               if (hasUnsaved && !window.confirm('Discard unsaved changes before switching sections?')) return
@@ -498,14 +499,16 @@ export default function DocumentEditor({
       </div>
 
       {/* Sticky footer */}
-      <footer className="flex-shrink-0 border-t border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <footer className="flex-shrink-0 border-t border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex">
+        {/* Left: status indicator (matches sidebar width) */}
+        <div className="w-80 flex-shrink-0 px-4 py-3.5 flex items-center gap-2 border-r border-slate-200 dark:border-zinc-800">
           <span className={`w-2 h-2 rounded-full flex-shrink-0 ${hasUnsaved ? 'bg-amber-400' : 'bg-emerald-400'}`} />
           <span className="text-xs text-slate-600 dark:text-zinc-400">
             {hasUnsaved ? 'You have unsaved changes to this section.' : 'All changes saved.'}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        {/* Right: action buttons (matches main content area) */}
+        <div className="flex-1 px-8 py-3.5 flex items-center justify-end gap-2">
           <button
             onClick={handleDiscard}
             disabled={!hasUnsaved}

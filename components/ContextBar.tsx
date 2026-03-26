@@ -78,9 +78,10 @@ function MilestoneTracker({ completion }: { completion: number }) {
 
 interface ContextBarProps {
   currentEntityId?: number
+  fullWidth?: boolean
 }
 
-export default function ContextBar({ currentEntityId }: ContextBarProps) {
+export default function ContextBar({ currentEntityId, fullWidth = false }: ContextBarProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const inProgress = ENTITIES.filter(e => e.completion > 0 && e.completion < 100).length
@@ -89,7 +90,7 @@ export default function ContextBar({ currentEntityId }: ContextBarProps) {
   return (
     <div className="relative z-[60] border-b border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex-shrink-0">
       {/* Header strip */}
-      <div className="mx-auto w-full max-w-6xl px-6 py-3.5 flex items-center justify-between">
+      <div className={`py-3.5 flex items-center justify-between ${fullWidth ? 'px-6' : 'mx-auto w-full max-w-6xl px-6'}`}>
         <div className="flex items-center gap-5">
           <span className="text-sm font-semibold text-slate-700 dark:text-zinc-300">
             {ENTITIES.length} Entities
@@ -132,8 +133,8 @@ export default function ContextBar({ currentEntityId }: ContextBarProps) {
       </div>
 
       {/* Expandable panel */}
-      <div className={`absolute left-0 right-0 z-[60] overflow-hidden transition-[max-height,opacity] duration-200 shadow-xl ${isExpanded ? 'max-h-[640px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="mx-auto w-full max-w-6xl px-6 pb-4">
+      <div className={`absolute left-0 right-0 z-[60] overflow-hidden transition-[max-height,opacity] duration-200 ${isExpanded ? 'max-h-[640px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className={`pt-2 pb-4 ${fullWidth ? 'px-6' : 'mx-auto w-full max-w-6xl px-6'}`}>
           <div className="rounded-xl border border-black/[0.09] dark:border-zinc-700 bg-white dark:bg-zinc-900 overflow-hidden shadow-lg">
             <div className="overflow-y-auto max-h-[calc(100vh-76px)]">
 

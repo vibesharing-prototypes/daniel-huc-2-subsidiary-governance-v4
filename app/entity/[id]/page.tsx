@@ -23,7 +23,7 @@ export default function EntityPage({ params }: { params: { id: string } }) {
   return (
     <div className="flex h-full overflow-hidden bg-[#f0f0f1] dark:bg-zinc-900">
       <main className="flex-1 min-w-0 flex flex-col overflow-hidden">
-        <ContextBar currentEntityId={entity.id} />
+        <ContextBar currentEntityId={entity.id} fullWidth={true} />
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-3 px-6 pt-4 pb-0 flex-shrink-0">

@@ -1,7 +1,17 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+
 export default function TopNav() {
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
+  const containerClass = isHomePage
+    ? 'mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-3.5'
+    : 'flex w-full items-center justify-between px-6 py-3.5'
+
   return (
     <nav className="border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-3.5">
+      <div className={containerClass}>
         {/* Left: logo mark + app title */}
         <div className="flex items-center gap-2.5">
           <svg viewBox="0 0 210 222" className="h-7 w-auto" xmlns="http://www.w3.org/2000/svg">
