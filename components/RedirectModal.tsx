@@ -43,7 +43,7 @@ export default function RedirectModal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-6"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-slate-900/50 dark:bg-black/65 backdrop-blur-[3px]" />

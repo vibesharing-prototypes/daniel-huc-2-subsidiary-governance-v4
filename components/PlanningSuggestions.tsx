@@ -130,7 +130,7 @@ function PlanningSuggestionModal({
   const isBatch = suggestion.entities.length > 1
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-[2px]" />
       <div className="relative bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-lg" onClick={e => e.stopPropagation()}>
         <button
@@ -326,9 +326,7 @@ export default function PlanningSuggestions() {
                           {primaryEntity.name}
                           {isBatch && <span className="text-slate-400 dark:text-zinc-500 font-normal"> + {suggestion.entities.length - 1} more</span>}
                         </p>
-                        {marketingMode ? (
-                          <SkeletonBar w="70%" h={6} opacity={0.08} />
-                        ) : (
+                        {!marketingMode && (
                           <p className="text-xs text-slate-500 dark:text-zinc-400 font-normal">{primaryEntity.country} · Board: {primaryEntity.nextBoard}</p>
                         )}
                       </>
@@ -367,7 +365,7 @@ export default function PlanningSuggestions() {
                 )}
 
                 {/* Hover-reveal block */}
-                {hasHoverReveal(suggestion) && !isApplied && (
+                {!marketingMode && hasHoverReveal(suggestion) && !isApplied && (
                   <div
                     className={`max-h-0 opacity-0 overflow-hidden transition-all duration-400 ease-in-out group-hover:max-h-[150px] group-hover:opacity-100 group-hover:mt-2.5 ${isApplying ? 'opacity-40' : ''}`}
                   >
@@ -390,12 +388,7 @@ export default function PlanningSuggestions() {
                 )}
 
                 {/* Progress widget (inline, when applying) or CTA row */}
-                {marketingMode ? (
-                  <div className="flex gap-2 mt-4 justify-end">
-                    <SkeletonBar w={110} h={38} />
-                    <SkeletonBar w={70} h={38} />
-                  </div>
-                ) : isApplying && job ? (
+                {isApplying && job ? (
                   <div className="mt-4">
                     <AgentProgressWidget job={job} />
                   </div>
@@ -415,16 +408,26 @@ export default function PlanningSuggestions() {
                   <div className="flex gap-2 mt-4 justify-end">
                     <button
                       onClick={e => handleRowCTA(e, suggestion)}
-                      className="text-[14px] font-normal bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl py-[11px] px-4 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 dark:active:bg-zinc-200 transition-colors"
+                      className={`text-[14px] font-normal rounded-xl py-[11px] px-4 transition-colors ${
+                        marketingMode
+                          ? 'text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600'
+                          : 'bg-slate-800 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-slate-900 dark:hover:bg-white active:bg-slate-950 dark:active:bg-zinc-200'
+                      }`}
                     >
                       {suggestion.actionLabel}
                     </button>
-                    <button
-                      onClick={e => handleDetails(e, suggestion)}
-                      className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[11px] px-4 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors"
-                    >
-                      Details
-                    </button>
+                    {marketingMode ? (
+                      <div className="flex items-center">
+                        <SkeletonBar w={70} h={38} />
+                      </div>
+                    ) : (
+                      <button
+                        onClick={e => handleDetails(e, suggestion)}
+                        className="text-[13px] font-normal text-slate-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 border border-black/[0.09] dark:border-zinc-700 rounded-xl py-[11px] px-4 hover:bg-slate-50 dark:hover:bg-zinc-700 hover:border-slate-200 dark:hover:border-zinc-600 transition-colors"
+                      >
+                        Details
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

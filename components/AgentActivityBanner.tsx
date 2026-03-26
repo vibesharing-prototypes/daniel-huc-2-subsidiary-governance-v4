@@ -2,6 +2,7 @@
 
 import { BOOK_BUILDING_ITEMS, PLANNING_SUGGESTIONS } from '@/components/data'
 import { useProtoState } from '@/components/ProtoStateContext'
+import { useMarketingMode } from '@/components/MarketingModeContext'
 
 type ProtoState = 'calm' | 'busy' | 'critical'
 
@@ -91,6 +92,7 @@ const CONFIGS: Record<ProtoState, StateConfig> = {
 
 export default function AgentActivityBanner() {
   const state = useProtoState()
+  const marketingMode = useMarketingMode()
   const cfg = CONFIGS[state]
   const items = BOOK_BUILDING_ITEMS.filter(i => i.states.includes(state))
   const suggestions = PLANNING_SUGGESTIONS.filter(s => s.states.includes(state))
@@ -99,9 +101,20 @@ export default function AgentActivityBanner() {
   const headline = cfg.headline.replace('{total}', String(total))
 
   // Build a dynamic subtext for calm state from actual data
-  const subtext = state === 'calm'
+  let subtext = state === 'calm'
     ? `${items.length} book building item${items.length !== 1 ? 's' : ''} and ${suggestions.length} planning suggestion${suggestions.length !== 1 ? 's' : ''} ready to review — from missing agenda sections and upcoming quarter prep to presenter updates and regulatory changes.`
     : cfg.subtext
+
+  // Shorten subtext in marketing mode
+  if (marketingMode) {
+    if (state === 'calm') {
+      subtext = `${items.length} book building item${items.length !== 1 ? 's' : ''} and ${suggestions.length} planning suggestion${suggestions.length !== 1 ? 's' : ''} ready to review.`
+    } else if (state === 'busy') {
+      subtext = `${total} items are waiting for review.`
+    } else if (state === 'critical') {
+      subtext = `${total} risks require disclosure review.`
+    }
+  }
   const metrics = cfg.metrics.map(m => ({
     ...m,
     value: m.value.replace('{total}', String(total)),

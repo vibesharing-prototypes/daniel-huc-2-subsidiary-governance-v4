@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ENTITIES } from '@/components/data'
 import EntityLogo from '@/components/EntityLogo'
+import { useMarketingMode } from '@/components/MarketingModeContext'
 
 const MILESTONES = [
   'Agenda set',
@@ -34,7 +35,7 @@ function getCurrentMilestoneIndex(completion: number): number {
   return -1
 }
 
-function MilestoneTracker({ completion }: { completion: number }) {
+function MilestoneTracker({ completion, hideLabel = false }: { completion: number; hideLabel?: boolean }) {
   const currentIdx = getCurrentMilestoneIndex(completion)
 
   return (
@@ -65,15 +66,24 @@ function MilestoneTracker({ completion }: { completion: number }) {
           )
         })}
       </div>
-      {currentIdx >= 0 ? (
-        <span className="text-[11px] font-medium leading-none text-zinc-500 dark:text-zinc-400">
-          {MILESTONES[currentIdx]}
-        </span>
-      ) : (
-        <span className="text-[10px] font-medium leading-none text-zinc-400 dark:text-zinc-600">Not started</span>
+      {!hideLabel && (
+        <>
+          {currentIdx >= 0 ? (
+            <span className="text-[11px] font-medium leading-none text-zinc-500 dark:text-zinc-400">
+              {MILESTONES[currentIdx]}
+            </span>
+          ) : (
+            <span className="text-[10px] font-medium leading-none text-zinc-400 dark:text-zinc-600">Not started</span>
+          )}
+        </>
       )}
     </div>
   )
+}
+
+function getMilestoneLabel(completion: number): string {
+  const currentIdx = getCurrentMilestoneIndex(completion)
+  return currentIdx >= 0 ? MILESTONES[currentIdx] : 'Not started'
 }
 
 interface ContextBarProps {
@@ -83,6 +93,7 @@ interface ContextBarProps {
 
 export default function ContextBar({ currentEntityId, fullWidth = false }: ContextBarProps) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const marketingMode = useMarketingMode()
 
   const inProgress = ENTITIES.filter(e => e.completion > 0 && e.completion < 100).length
   const approved = ENTITIES.filter(e => e.completion >= 96).length
@@ -139,11 +150,23 @@ export default function ContextBar({ currentEntityId, fullWidth = false }: Conte
             <div className="overflow-y-auto max-h-[calc(100vh-76px)]">
 
             {/* Table header */}
-            <div className="grid grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4 items-center px-5 py-3 bg-slate-50/50 dark:bg-zinc-800/30 border-b border-slate-200 dark:border-zinc-700">
+            <div className={`grid items-center px-5 py-3 bg-slate-50/50 dark:bg-zinc-800/30 border-b border-slate-200 dark:border-zinc-700 ${
+              marketingMode ? 'grid-cols-[2.5fr_1.7fr_1.7fr_3.4fr_auto] gap-x-1.5' : 'grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4'
+            }`}>
               <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Entity</span>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Country</span>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Next Board Meeting</span>
-              <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Progress</span>
+              {marketingMode ? (
+                <>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Next Board Meeting</span>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Progress Status</span>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide" />
+                </>
+              ) : (
+                <>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Country</span>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Next Board Meeting</span>
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-zinc-500 uppercase tracking-wide">Progress</span>
+                </>
+              )}
               <span />
             </div>
 
@@ -154,7 +177,9 @@ export default function ContextBar({ currentEntityId, fullWidth = false }: Conte
                 <Link
                   key={entity.id}
                   href={`/entity/${entity.id}`}
-                  className={`grid grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4 items-center px-5 py-2.5 transition-colors cursor-pointer ${
+                  className={`grid items-center px-5 py-2.5 transition-colors cursor-pointer ${
+                    marketingMode ? 'grid-cols-[2.5fr_1.7fr_1.7fr_3.4fr_auto] gap-x-1.5' : 'grid-cols-[2.5fr_1.5fr_1.5fr_3.5fr_auto] gap-x-4'
+                  } ${
                     isActive
                       ? 'bg-blue-50 dark:bg-blue-950/30 hover:bg-blue-100 dark:hover:bg-blue-950/40'
                       : 'hover:bg-slate-50 dark:hover:bg-zinc-800 active:bg-slate-100 dark:active:bg-zinc-700'
@@ -164,21 +189,40 @@ export default function ContextBar({ currentEntityId, fullWidth = false }: Conte
                     <div className="flex items-center gap-3 min-w-0">
                       <EntityLogo entity={entity} />
                       <div className="min-w-0">
-                        <p className={`text-[11px] font-semibold leading-snug truncate ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-zinc-200'}`}>
+                        <p className={`font-semibold leading-snug truncate ${
+                          marketingMode ? 'text-[13px]' : 'text-[11px]'
+                        } ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-slate-800 dark:text-zinc-200'}`}>
                           {entity.shortName}
                         </p>
-                        <p className="text-[10px] text-slate-400 dark:text-zinc-500 truncate mt-0.5">{entity.name}</p>
+                        {!marketingMode && (
+                          <p className="text-[10px] text-slate-400 dark:text-zinc-500 truncate mt-0.5">{entity.name}</p>
+                        )}
                       </div>
                     </div>
 
-                    {/* Country */}
-                    <span className="text-[10px] text-slate-500 dark:text-zinc-500">{entity.country}</span>
+                    {marketingMode ? (
+                      <>
+                        {/* Next board - larger font in marketing mode */}
+                        <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium">{entity.nextBoard}</span>
 
-                    {/* Next board */}
-                    <span className="text-[10px] text-slate-600 dark:text-zinc-400 font-medium">{entity.nextBoard}</span>
+                        {/* Progress status text */}
+                        <span className="text-xs text-slate-600 dark:text-zinc-400 font-medium">{getMilestoneLabel(entity.completion)}</span>
 
-                    {/* Milestone tracker */}
-                    <MilestoneTracker completion={entity.completion} />
+                        {/* Milestone tracker - visual only */}
+                        <MilestoneTracker completion={entity.completion} hideLabel={true} />
+                      </>
+                    ) : (
+                      <>
+                        {/* Country */}
+                        <span className="text-[10px] text-slate-500 dark:text-zinc-500">{entity.country}</span>
+
+                        {/* Next board */}
+                        <span className="text-[10px] text-slate-600 dark:text-zinc-400 font-medium">{entity.nextBoard}</span>
+
+                        {/* Milestone tracker - with label */}
+                        <MilestoneTracker completion={entity.completion} />
+                      </>
+                    )}
 
                     {/* Chevron */}
                     <svg

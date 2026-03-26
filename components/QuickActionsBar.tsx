@@ -236,13 +236,15 @@ export default function QuickActionsBar() {
               <p className="text-[13px] font-semibold text-slate-800 group-hover:text-slate-900 dark:text-zinc-100 leading-snug truncate transition-colors">
                 {action.label}
               </p>
-              {marketingMode ? (
-                <SkeletonBar w="80%" h={6} opacity={0.08} />
-              ) : (
-                <p className="text-[11px] text-slate-400 group-hover:text-slate-500 dark:text-zinc-500 leading-snug truncate transition-colors">
-                  {action.sublabel}
-                </p>
-              )}
+              <div className="h-[14px] flex items-center">
+                {marketingMode ? (
+                  <SkeletonBar w="80%" h={6} opacity={0.08} />
+                ) : (
+                  <p className="text-[11px] text-slate-400 group-hover:text-slate-500 dark:text-zinc-500 leading-snug truncate transition-colors">
+                    {action.sublabel}
+                  </p>
+                )}
+              </div>
             </div>
           </button>
         ))}
@@ -278,11 +280,13 @@ export default function QuickActionsBar() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-[13px] font-semibold text-slate-800 dark:text-zinc-100 leading-snug">{action.label}</p>
-                      {marketingMode ? (
-                        <SkeletonBar w="140px" h={6} opacity={0.08} />
-                      ) : (
-                        <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug">{action.sublabel}</p>
-                      )}
+                      <div className="h-[14px] flex items-center">
+                        {marketingMode ? (
+                          <SkeletonBar w="140px" h={6} opacity={0.08} />
+                        ) : (
+                          <p className="text-[11px] text-slate-400 dark:text-zinc-500 leading-snug">{action.sublabel}</p>
+                        )}
+                      </div>
                     </div>
                   </button>
                 ))}
