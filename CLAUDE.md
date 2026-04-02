@@ -1,4 +1,4 @@
-# Prototype
+# HUC 2 Subsidiary Governance (V4)
 
 ## Project Structure
 
@@ -6,7 +6,7 @@ This is a **Next.js 14 App Router** project deployed via [VibeSharing](https://v
 
 - app/page.tsx — **Main page. This is what visitors see.** Edit this file.
 - app/layout.tsx — Root layout (HTML head, global styles)
-- app/globals.css — Tailwind CSS styles
+- app/globals.css — Global styles
 - public/ — Static assets (images, fonts, standalone HTML)
 
 ## IMPORTANT: File Placement Rules
@@ -28,7 +28,7 @@ If you have a standalone HTML prototype, either:
 
 ## Conventions
 
-- Next.js 14 (App Router) + Tailwind CSS
+- Next.js 14 (App Router)
 - Keep prototypes self-contained — inline mock data, no external APIs
 - One page.tsx per prototype when possible
 
