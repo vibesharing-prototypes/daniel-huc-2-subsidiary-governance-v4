@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { type AgentJob } from '@/components/AgentActivityContext'
 import RedirectModal, { type RedirectDestination } from '@/components/RedirectModal'
 
-const JOB_DURATION = 30_000
-const MIN_STEP_MS = 2_000
+const JOB_DURATION = 8_000
+const MIN_STEP_MS = 600
 
 function generateSchedule(stepCount: number): number[] {
   if (stepCount === 0) return []

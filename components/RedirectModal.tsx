@@ -35,7 +35,6 @@ export default function RedirectModal({
       timers.push(setTimeout(() => setCompletedSteps(i + 1), ms))
     })
     timers.push(setTimeout(() => setIsDone(true), 3100))
-    timers.push(setTimeout(onClose, 4000))
     return () => timers.forEach(clearTimeout)
   }, [onClose])
 

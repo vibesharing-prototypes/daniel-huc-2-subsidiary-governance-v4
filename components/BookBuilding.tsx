@@ -96,7 +96,7 @@ function BookBuildingModal({ item, onClose }: { item: BookBuildingItem; onClose:
         title: item.title,
         workflowSteps: buildBookBuildingSteps(allApps),
       })
-      setTimeout(() => agentActivity.completeJob(jobId), 30_000)
+      setTimeout(() => agentActivity.completeJob(jobId), 8_000)
     }
     onClose()
   }
@@ -198,7 +198,7 @@ export default function BookBuilding() {
     setTimeout(() => {
       setItemStatus(prev => ({ ...prev, [item.id]: { status: 'applied' } }))
       agentActivity.completeJob(jobId)
-    }, 30_000)
+    }, 8_000)
   }
 
   function handleCTA(e: React.MouseEvent, item: BookBuildingItem) {
@@ -208,7 +208,7 @@ export default function BookBuilding() {
 
   function handleDetails(e: React.MouseEvent, item: BookBuildingItem) {
     e.stopPropagation()
-    setSelectedItem(item)
+    setConfirmItem(item)
   }
 
   const stateItems = BOOK_BUILDING_ITEMS.filter(i => i.states.includes(state))

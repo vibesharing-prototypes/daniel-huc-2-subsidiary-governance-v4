@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { ENTITIES } from '@/components/data'
 import EntityLogo from '@/components/EntityLogo'
 
@@ -96,13 +97,17 @@ export default function ConfirmActionModal({
                       {entity.country}
                     </p>
                   </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-[10px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wide">
-                      Next board
-                    </p>
-                    <p className="text-[13px] font-semibold text-slate-700 dark:text-zinc-300 mt-0.5">
-                      {entity.nextBoard}
-                    </p>
+                  <div className="flex-shrink-0">
+                    <Link
+                      href={`/entity/${entity.id}`}
+                      onClick={onClose}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-slate-600 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded-lg transition-colors"
+                    >
+                      Details
+                      <svg className="w-3 h-3 opacity-60" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 2l4 4-4 4" />
+                      </svg>
+                    </Link>
                   </div>
                 </div>
               ))}
